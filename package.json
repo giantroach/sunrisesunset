@@ -1,5 +1,5 @@
 {
-  "name": "clueverge",
+  "name": "sunrisesunset",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -14,13 +14,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.11"
+    "vue": "^3.4.27"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.5.2",
-    "typescript": "^5.2.2",
-    "vite": "^5.0.8",
-    "vite-plugin-css-injected-by-js": "^3.1.1",
-    "vue-tsc": "^1.8.25"
+    "@vitejs/plugin-vue": "^5.0.4",
+    "sass": "^1.77.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vite-plugin-css-injected-by-js": "^3.5.1",
+    "vue-tsc": "^2.0.19"
   }
 }

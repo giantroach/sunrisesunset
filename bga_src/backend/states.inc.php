@@ -62,36 +62,90 @@ $machinestates = [
   // Note: ID=2 => your first state
 
   2 => [
-    'name' => 'playerTurn',
-    'description' => clienttranslate('${actplayer} must play a card or pass'),
-    'descriptionmyturn' => clienttranslate('${you} must play a card or pass'),
-    'type' => 'activeplayer',
-    'possibleactions' => ['playCard', 'pass'],
-    'transitions' => ['playCard' => 2, 'pass' => 2],
+    'name' => 'roundSetup',
+    'type' => 'game',
+    'action' => 'stRoundSetup',
+    'updateGameProgression' => true,
+    'transitions' => ['mulliganTurn' => 11],
   ],
 
-  /*
-    Examples:
-
-    2 => array(
-        "name" => "nextPlayer",
-        "description" => '',
-        "type" => "game",
-        "action" => "stNextPlayer",
-        "updateGameProgression" => true,
-        "transitions" => array( "endGame" => 99, "nextPlayer" => 10 )
+  11 => [
+    'name' => 'mulliganTurn',
+    'description' => clienttranslate(
+      '${actplayer} may discard to draw a new card.'
     ),
-
-    10 => array(
-        "name" => "playerTurn",
-        "description" => clienttranslate('${actplayer} must play a card or pass'),
-        "descriptionmyturn" => clienttranslate('${you} must play a card or pass'),
-        "type" => "activeplayer",
-        "possibleactions" => array( "playCard", "pass" ),
-        "transitions" => array( "playCard" => 2, "pass" => 2 )
+    'descriptionmyturn' => clienttranslate(
+      '${you} may discard a card to draw a new card.'
     ),
+    'type' => 'activeplayer',
+    'possibleactions' => ['mulligan'],
+    'transitions' => [
+      'mulliganNextPlayer' => 12,
+      'nextPlayer' => 22,
+      'zombiePass' => 22,
+    ],
+  ],
 
-*/
+  12 => [
+    'name' => 'mulliganNextPlayer',
+    'type' => 'game',
+    'action' => 'stMulliganNextPlayer',
+    'updateGameProgression' => true,
+    'transitions' => ['mulliganTurn' => 11],
+  ],
+
+  21 => [
+    'name' => 'playerTurn',
+    'description' => clienttranslate('${actplayer} must play a card.'),
+    'descriptionmyturn' => clienttranslate('${you} must play a card.'),
+    'type' => 'activeplayer',
+    'possibleactions' => ['playCard'],
+    'transitions' => [
+      'nextPlayer' => 22,
+      'zombiePass' => 22,
+      'reincarnation' => 32,
+    ],
+  ],
+
+  22 => [
+    'name' => 'nextPlayer',
+    'type' => 'game',
+    'action' => 'stNextPlayer',
+    'updateGameProgression' => true,
+    'transitions' => ['playerTurn' => 21, 'endRound' => 51],
+  ],
+
+  31 => [
+    'name' => 'reincarnationTurn',
+    'description' => clienttranslate(
+      '${actplayer} must play the reincarnated card.'
+    ),
+    'descriptionmyturn' => clienttranslate(
+      '${you} must play the reincarnated card.'
+    ),
+    'type' => 'activeplayer',
+    'possibleactions' => ['playCard'],
+    'transitions' => ['nextPlayer' => 22, 'zombiePass' => 22],
+  ],
+
+  32 => [
+    'name' => 'reincarnation',
+    'type' => 'game',
+    'action' => 'stReincarnationNextPlayer',
+    'updateGameProgression' => true,
+    'transitions' => ['reincarnationTurn' => 31],
+  ],
+
+  51 => [
+    'name' => 'endRound',
+    'description' => clienttranslate('${actplayer} is confirming the result.'),
+    'descriptionmyturn' => clienttranslate('Press "Confirm" to continue.'),
+    'type' => 'multipleactiveplayer',
+    'action' => 'stEndRound',
+    'updateGameProgression' => true,
+    'possibleactions' => ['endRoundConfirm'],
+    'transitions' => ['roundSetup' => 2, 'endGame' => 99],
+  ],
 
   // Final state.
   // Please do not modify (and do not overload action/args methods).

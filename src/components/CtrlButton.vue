@@ -2,13 +2,14 @@
 import { inject, ref } from 'vue';
 import type { Ref } from 'vue';
 import { ctrlButtonDefs as d } from '../def/ctrlButton';
-import type { ButtonType } from '../type/ctrlButton.d';
+import type { ButtonType } from '../type/ctrl-button.d';
 
 const props = defineProps<{
   type: ButtonType;
-  active: Boolean;
-  display: Boolean;
+  active?: boolean;
+  display?: boolean;
 }>();
+
 const emit = defineEmits(['btnClick']);
 
 const i18n: Ref<any> = inject('i18n') || ref('');
@@ -22,7 +23,7 @@ const btnClick = () => {
 </script>
 
 <template>
-  <Button
+  <button
     v-bind:style="{
       width: d[props.type].size.width,
       height: d[props.type].size.height,
@@ -40,7 +41,7 @@ const btnClick = () => {
     @click="btnClick()"
   >
     {{ i18n(d[props.type].label) }}
-  </Button>
+  </button>
 </template>
 
 <style scoped></style>

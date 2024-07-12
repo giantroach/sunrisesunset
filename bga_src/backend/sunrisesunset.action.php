@@ -37,24 +37,38 @@ class action_sunrisesunset extends APP_GameAction
 
   // TODO: defines your action entry points there
 
-  /*
+  public function mulligan()
+  {
+    self::setAjaxMode();
+    $cardID = self::getArg('card', AT_alphanum, false);
 
-    Example:
+    $this->game->mulligan($cardID);
+    self::ajaxResponse();
+  }
 
-    public function myAction()
-    {
-        self::setAjaxMode();
+  public function playCard()
+  {
+    self::setAjaxMode();
+    $cardID = self::getArg('card', AT_alphanum, true);
+    $gridID = self::getArg('gridID', AT_posint, true);
+    $targetGridID = self::getArg('targetGridID', AT_int, false);
+    $targetGridSide = self::getArg('targetGridSide', AT_alphanum, false);
+    $targetCol = self::getArg('targetCol', AT_int, false);
 
-        // Retrieve arguments
-        // Note: these arguments correspond to what has been sent through the javascript "ajaxcall" method
-        $arg1 = self::getArg( "myArgument1", AT_posint, true );
-        $arg2 = self::getArg( "myArgument2", AT_posint, true );
+    $this->game->playCard(
+      $cardID,
+      $gridID,
+      $targetGridID,
+      $targetGridSide,
+      $targetCol
+    );
+    self::ajaxResponse();
+  }
 
-        // Then, call the appropriate method in your game logic, like "playCard" or "myAction"
-        $this->game->myAction( $arg1, $arg2 );
-
-        self::ajaxResponse( );
-    }
-
-    */
+  public function endRoundConfirm()
+  {
+    self::setAjaxMode();
+    $this->game->endRoundConfirm();
+    self::ajaxResponse();
+  }
 }

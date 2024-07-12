@@ -1,32 +1,24 @@
 /**
- * Tholos interfaces
+ * Sunrise Sunset interfaces
  */
 
 import { Player, Gamestate } from './framework.d';
-import { StoneType } from './stone.d';
-import { OrnamentType } from './ornament.d';
 
-interface MainBoardRec {
-  id: string;
+interface Card {
+  id: string; // num str
   location: string;
-  color: StoneType;
+  location_arg: string; // num str
+  type: string; // num str
+  type_arg: string; // num str
+  meta?: string;
 }
 
-interface WorkshopRec {
-  id: string;
-  ws: 'black' | 'white';
-  color: StoneType;
+interface Score {
+  [playerId: string]: string[];
 }
 
-interface QuarryRec {
-  color: StoneType;
-  count: string;
-}
-
-interface OrnamentRec {
-  id: string;
-  location: string;
-  type: OrnamentType;
+interface Center {
+  controller: string;
 }
 
 interface Gamedata {
@@ -42,21 +34,23 @@ interface Gamedata {
   tablespeed: string;
 
   // Add here variables you set up in getAllDatas
-  gameMode: 'standard' | 'advanced';
-  mainBoard: {
-    [idx: string]: MainBoardRec;
+  player_cards: Card[];
+  player_table: Card[];
+  oppo_table: Card[];
+  day_or_night: 'day' | 'night';
+  round: string;
+  center: {
+    left: Center;
+    center: Center;
+    right: Center;
   };
-  // array alike but not an array
-  workshop: {
-    [idx: string]: WorkshopRec;
+  reincarnated_card_id?: string | null;
+  reincarnated_col?: string | null;
+  score?: {
+    [playerId: number | 'center']: number[];
   };
-  quarry: {
-    [color: string]: QuarryRec;
-  };
-  ornament: {
-    [idx: string]: OrnamentRec;
-  };
-  playerSide: 'white' | 'black';
+  winner?: string[];
+  player_side?: 'sun' | 'night';
 }
 
-export { Score, Gamedata };
+export { CardMeta, Card, Score, Gamedata };
