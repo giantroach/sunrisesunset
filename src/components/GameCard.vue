@@ -86,7 +86,8 @@ const updateDef = () => {
   size = def.size;
   textDef = def.textDef || {
     offsetY: '0',
-    padding: '0',
+    paddingSide: '0',
+    paddingBottom: '0',
   };
   miniDef = def.miniDef || null;
   bgPos.value = getBgPos(def.sprite, def.size, idx);
@@ -207,7 +208,9 @@ const hideDetails = () => {
             v-if="text"
             v-bind:style="{
               top: textDef.offsetY,
-              borderWidth: textDef.padding || 0,
+              borderWidth: `0 ${textDef.paddingSide || 0} ${
+                textDef.paddingBottom || 0
+              }`,
             }"
           >
             {{ i18n(text) }}
@@ -272,7 +275,9 @@ const hideDetails = () => {
           v-if="text"
           v-bind:style="{
             top: textDef.offsetY,
-            borderWidth: textDef.padding || 0,
+            borderWidth: `0 ${textDef.paddingSide || 0} ${
+              textDef.paddingBottom || 0
+            }`,
           }"
         >
           {{ i18n(text) }}
@@ -339,6 +344,7 @@ const hideDetails = () => {
   border: 0px solid transparent;
   overflow-y: auto;
   text-align: left;
+  font-size: small;
 }
 .title {
   position: absolute;
