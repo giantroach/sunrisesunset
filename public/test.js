@@ -1376,7 +1376,20 @@ function loadTestData(idx = 0) {
   // vue.state.refresh();
 }
 
-const testEvent = [];
+const testEvent = [
+  {
+    name: 'newRound',
+    args: [
+      {
+        uid: '669d0877420c9',
+        type: 'newRound',
+        log: 'New round started',
+        args: { round: 1 },
+        synchro: 1,
+      },
+    ],
+  },
+];
 
 function loadTestEvent(idx = 0) {
   const vue = window.vue;

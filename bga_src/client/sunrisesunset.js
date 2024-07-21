@@ -101,10 +101,28 @@ define([
       console.log('Entering state: ' + stateName);
       p.then(() => {
         switch (stateName) {
+          case 'roundSetup':
+            vue.bgaStates.push('roundSetup');
+            break;
+          case 'mulliganTurn':
+            if (this.isCurrentPlayerActive()) {
+              vue.bgaStates.push('mulligan:init');
+            }
+            break;
           case 'playerTurn':
             if (this.isCurrentPlayerActive()) {
               vue.bgaStates.push('playerTurn:init');
             }
+            break;
+          case 'reincarnationTurn':
+            if (this.isCurrentPlayerActive()) {
+              vue.bgaStates.push('reincarnationTurn:init');
+            }
+            break;
+          case 'endRound':
+            vue.bgaStates.push('endRound:init');
+            break;
+          case 'dummmy':
             break;
         }
       });
@@ -117,7 +135,15 @@ define([
       console.log('Leaving state: ' + stateName);
       p.then(() => {
         switch (stateName) {
+          case 'mulliganTurn':
+            vue.bgaStates.push('waitingForOtherPlayer');
+            break;
+
           case 'playerTurn':
+            vue.bgaStates.push('waitingForOtherPlayer');
+            break;
+
+          case 'reincarnationTurn':
             vue.bgaStates.push('waitingForOtherPlayer');
             break;
         }
@@ -235,7 +261,16 @@ define([
       // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
       //
 
-      const notifications = ['someaction'];
+      const notifications = [
+        'newRound',
+        'mulligan',
+        'playCard',
+        'moveCard',
+        'updateCard',
+        'reincarnateCard',
+        'score',
+        'endRound',
+      ];
       notifications.forEach((n) => {
         dojo.subscribe(n, this, (data) => {
           vue.bgaNotifications.push({

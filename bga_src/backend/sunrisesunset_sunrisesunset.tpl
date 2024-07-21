@@ -25,9 +25,6 @@
     Please REMOVE this comment before publishing your game on BGA
 -->
 
-
-This is your game interface. You can edit this HTML in your ".tpl" file.
-
 <div id="app"></div>
 <script type="text/javascript">
 
@@ -38,6 +35,14 @@ This is your game interface. You can edit this HTML in your ".tpl" file.
 var jstpl_some_game_item='<div class="my_game_item" id="my_game_item_${MY_ITEM_ID}"></div>';
 
 */
+
+let jstpl_player_board = `
+<div class="vughex-hand-size">
+  <div>
+    <span id="hand-count_p\${id}">0</span>
+    <span id="hand-icon_p\${id}" class="fa fa-hand-paper-o"></span>
+  </div>
+</div>`;
 
 </script>
 
