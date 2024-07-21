@@ -38,6 +38,7 @@ class SunriseSunset extends Table
       //    "my_first_game_variant" => 100,
       //    "my_second_game_variant" => 101,
       //      ...
+      "max_score" => 100,
     ]);
 
     // create instance specifying card module
@@ -84,7 +85,8 @@ class SunriseSunset extends Table
         addslashes($player['player_avatar']) .
         "')";
     }
-    $sql .= implode($values, ',');
+    // php8 order
+    $sql .= implode(',', $values);
     self::DbQuery($sql);
     self::reattributeColorsBasedOnPreferences(
       $players,
