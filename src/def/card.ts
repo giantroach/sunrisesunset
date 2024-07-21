@@ -177,7 +177,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
   centerCard: {
     image: centersetImgUrl,
     sprite: '6x3',
-    size: { width: '138px', height: '121.6px', radius: '10px' },
+    size: { width: '138px', height: '138px', radius: '10px' },
   },
 };
 
