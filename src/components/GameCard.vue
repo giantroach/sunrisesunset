@@ -148,6 +148,11 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     if (mcTop + mcRect.height > bdRect.height) {
       mcTop = bdRect.height - mcRect.height;
     }
+    // bdRect.height depends on all the items below
+    const maxTop = window.innerHeight - mcRect.height;
+    if (mcTop > maxTop) {
+      mcTop = maxTop;
+    }
     if (mcLeft + mcRect.width > bdRect.width) {
       mcLeft = bdRect.width - mcRect.width;
     }
