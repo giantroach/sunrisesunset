@@ -4,6 +4,11 @@ interface SizeDef {
   radius: string;
 }
 
+interface TextPlaceholder {
+  regexp: RegExp;
+  img: string;
+}
+
 interface TextLayoutDef {
   offsetY: string;
   offsetX?: string;
@@ -12,19 +17,19 @@ interface TextLayoutDef {
 }
 
 type OnPlay =
-  | "TargetSameLane:Silence"
-  | "TargetNonStealthSameLane:Reincanate"
-  | "TargeAnytStealth:Reveal"
-  | "TargetSameLaneToAnother:Maze";
+  | 'TargetSameLane:Silence'
+  | 'TargetNonStealthSameLane:Reincanate'
+  | 'TargeAnytStealth:Reveal'
+  | 'TargetSameLaneToAnother:Maze';
 type OnResolution =
-  | "IncleaseCenterBy1"
-  | "Receive1OnLose"
-  | "Becomes15OnCenter0or6"
-  | "ChangeCenterTo0"
-  | "LowerWins"
-  | "TiesOn4+"
-  | "Deal1OnWin"
-  | "ReducesCenterBy2";
+  | 'IncleaseCenterBy1'
+  | 'Receive1OnLose'
+  | 'Becomes15OnCenter0or6'
+  | 'ChangeCenterTo0'
+  | 'LowerWins'
+  | 'TiesOn4+'
+  | 'Deal1OnWin'
+  | 'ReducesCenterBy2';
 
 interface CardDetail {
   name: string;
@@ -49,6 +54,13 @@ interface CardDef {
     [id: number]: CardDetail;
   };
   miniDef?: MiniDef;
+  placeholder?: PlaceholderDef;
+}
+
+interface PlaceholderDef {
+  // FIXME: should use sprites
+  defs: TextPlaceholder[];
+  size: SizeDef;
 }
 
 interface MiniDef {
@@ -61,4 +73,4 @@ interface CardMetaDef {
   text: string;
 }
 
-export { SizeDef, TextLayoutDef, CardDetail, CardDef, MiniDef, CardMetaDef };
+export { SizeDef, TextPlaceholder, TextLayoutDef, CardDetail, CardDef, MiniDef, CardMetaDef };

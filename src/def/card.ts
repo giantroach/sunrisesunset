@@ -2,6 +2,9 @@ import { CardDef, CardDetail, CardMetaDef } from '../type/card-def.d';
 import cardsetImgUrl from '../assets/cardset.png';
 import cardsetMiniImgUrl from '../assets/cardset-mini.png';
 import centersetImgUrl from '../assets/centerset.png';
+import iconPowerImgUrl from '../assets/power.png';
+import iconPlaceImgUrl from '../assets/place.png';
+import iconCombatImgUrl from '../assets/combat.png';
 
 const cardDefs: { [cardType: string]: CardDef } = {
   mainCard: {
@@ -17,7 +20,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
     details: {
       0: {
         name: 'Anubis',
-        text: '[Placement] Choose a unit already placed in this lane. Disable stealth and ability from the unit.',
+        text: '${Placement} Choose a unit already placed in this lane. Disable stealth and ability from the unit.',
         power: {
           fixed: 2,
           center: 1,
@@ -27,7 +30,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       1: {
         name: 'Isis',
-        text: '[Placement] Discard a non-stealth unit in this lane. The owner draws a unit card from the pile and immediately places it on the same lane.',
+        text: '${Placement} Discard a non-stealth unit in this lane. The owner draws a unit card from the pile and immediately places it on the same lane.',
         power: {
           fixed: 1,
           center: 1,
@@ -37,7 +40,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       2: {
         name: 'Maat',
-        text: '[Combat] Increases ${loc_num} in this lane by 1.',
+        text: '${Combat} Increases ${Power} in this lane by 1.',
         power: {
           fixed: 0,
           center: 2,
@@ -47,7 +50,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       3: {
         name: 'Apofis',
-        text: '[Combat] Receive 1 additional damage if you lose in this lane.',
+        text: '${Combat} Receive 1 additional damage if you lose in this lane.',
         power: {
           fixed: 0,
           center: 3,
@@ -57,7 +60,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       4: {
         name: 'Apis',
-        text: '[Combat] Power of APIS becomes 15 if ${loc_num} in this lane is either 6 or more than 6 or 0 or lower than 0.',
+        text: '${Combat} Power of APIS becomes 15 if ${Power} in this lane is either 6 or more than 6 or 0 or lower than 0.',
         power: {
           fixed: 0,
           center: 1,
@@ -67,7 +70,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       5: {
         name: 'Ra',
-        text: '[Placement] Choose and disable stealth from a unit (regardless of the lane).',
+        text: '${Placement} Choose and disable stealth from a unit (regardless of the lane).',
         power: {
           fixed: 3,
           center: 1,
@@ -86,7 +89,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       7: {
         name: 'Eclipse',
-        text: '[Combat] Draw the combat in this lane if the power gap is 4+ (prior to Osiris).',
+        text: '${Combat} Draw the combat in this lane if the power gap is 4+ (prior to Osiris).',
         power: {
           fixed: 0,
           center: 1,
@@ -95,7 +98,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       8: {
         name: 'Heka',
-        text: '[Placement] Choose a stealth unit in this lane. Move it to another lane.',
+        text: '${Placement} Choose a stealth unit in this lane. Move it to another lane.',
         power: {
           fixed: 4,
           center: 0,
@@ -105,7 +108,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       9: {
         name: 'La Plaga',
-        text: '[Combat] Change ${loc_num} in this lane to 0. (Apply this before any other combat abilities.)',
+        text: '${Combat} Change ${Power} in this lane to 0. (Apply this before any other combat abilities.)',
         power: {
           fixed: 3,
           center: 0,
@@ -114,7 +117,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       10: {
         name: 'Osiris',
-        text: '[Combat] The one with lower power wins in this lane (unless there is a draw).',
+        text: '${Combat} The one with lower power wins in this lane (unless there is a draw).',
         power: {
           fixed: 7,
           center: 0,
@@ -123,7 +126,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       11: {
         name: 'Bastet',
-        text: '[Combat] Deals 1 additional damage to the opponent if you win in this lane.',
+        text: '${Combat} Deals 1 additional damage to the opponent if you win in this lane.',
         power: {
           fixed: 2,
           center: 0,
@@ -132,7 +135,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       12: {
         name: 'El Libro de los Muertos',
-        text: '[Combat] Reduces ${loc_num} in this lane by 2.',
+        text: '${Combat} Reduces ${Power} in this lane by 2.',
         power: {
           fixed: 5,
           center: 0,
@@ -173,6 +176,14 @@ const cardDefs: { [cardType: string]: CardDef } = {
       sprite: '8x3',
       size: { width: '138px', height: '138px', radius: '10px' },
     },
+    placeholder: {
+      defs: [
+        { regexp: /\$\{Power\}/g, img: iconPowerImgUrl },
+        { regexp: /\$\{Placement\}/g, img: iconPlaceImgUrl },
+        { regexp: /\$\{Combat\}/g, img: iconCombatImgUrl },
+      ],
+      size: { width: '16px', height: '16px', radius: '0px' },
+    },
   },
   centerCard: {
     image: centersetImgUrl,
@@ -183,7 +194,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
 
 const cardMetaDefs: { [cardMetaID: string]: CardMetaDef } = {
   oracle: {
-    text: 'Stealth and the [Combat] ability are disabled.',
+    text: 'Stealth and the ${Combat} ability are disabled.',
   },
   watcher: {
     text: 'Stealth is disabled.',

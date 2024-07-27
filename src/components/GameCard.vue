@@ -2,7 +2,12 @@
 import { inject, ref } from 'vue';
 import { watch } from 'vue';
 import Modal from './Modal.vue';
-import { SizeDef, MiniDef, TextLayoutDef } from '../type/card-def.d';
+import {
+  SizeDef,
+  MiniDef,
+  TextLayoutDef,
+  TextPlaceholder,
+} from '../type/card-def.d';
 import { CardMeta } from '../type/card.d';
 import { cardMetaDefs } from '../def/card';
 import type { Ref } from 'vue';
@@ -33,6 +38,8 @@ let textDef!: TextLayoutDef;
 let text!: string;
 let prioritizeMini: Ref<boolean> = ref(props.prioritizeMini);
 let miniDef!: MiniDef | null;
+let placeholderDefs!: TextPlaceholder[];
+let placeholderSize!: SizeDef;
 const selected: Ref<boolean> = ref(props.selected || false);
 const selectable: Ref<boolean> = ref(props.selectable);
 const ghost: Ref<boolean> = ref(props.ghost);
@@ -97,6 +104,12 @@ const updateDef = () => {
   bgPosMini.value = getBgPos(def.miniDef.sprite, def.miniDef.size, idx);
   onlyMini.value = def.details?.[idx]?.onlyMini || false;
   minModalTop = def.minModalTop || 0;
+  placeholderDefs = def.placeholder?.defs || [];
+  placeholderSize = def.placeholder?.size || {
+    width: '0',
+    height: '0',
+    radius: '0',
+  };
 };
 updateDef();
 
@@ -189,6 +202,24 @@ const mouseOutFromDetail = () => {
 const hideDetails = () => {
   modal.value = false;
   emit('hideDetail', props.id);
+};
+
+const getFormatText = (text: string): string => {
+  return placeholderDefs.reduce((acc: string, cur: TextPlaceholder) => {
+    return acc.replace(
+      cur.regexp,
+      `<span class="inline-img" ` +
+        `style="` +
+        `background-image:url(${cur.img});` +
+        `height:${placeholderSize.height};` +
+        `width:${placeholderSize.width};` +
+        `background-position:center;` +
+        `display:inline-block;` +
+        `background-size: contain;` +
+        `background-repeat: no-repeat;` +
+        `"></span>`
+    );
+  }, text);
 };
 </script>
 
@@ -284,9 +315,8 @@ const hideDetails = () => {
               textDef.paddingBottom || 0
             }`,
           }"
-        >
-          {{ i18n(text) }}
-        </div>
+          v-html="getFormatText(i18n(text))"
+        ></div>
       </div>
     </div>
 
@@ -350,6 +380,7 @@ const hideDetails = () => {
   overflow-y: auto;
   text-align: left;
   font-size: small;
+  line-height: 16px;
 }
 .title {
   position: absolute;
