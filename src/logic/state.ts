@@ -315,7 +315,7 @@ class State {
       case 'reincarnationTurn:beforeTargetSelect2': {
         const [x, y] = this.getSelectedCoordinate(1);
         const laneSelectable = this.setTargetAnotherLane(x, y);
-        this.gridData.value.selectable = [];
+        this.assign(this.gridData, 'selectable', []);
         if (!laneSelectable) {
           this.setSubState('afterTargetSelect');
           break;
@@ -531,9 +531,9 @@ class State {
       }
     }
     if (!this.gridData.value.selectable) {
-      this.gridData.value.selectable = [[], []];
+      this.assign(this.gridData, 'selectable', [[], []]);
     }
-    this.gridData.value.selectable[1] = selectable;
+    this.assign(this.gridData, ['selectable', 1], selectable);
     return result;
   }
 
@@ -554,9 +554,9 @@ class State {
       }
     }
     if (!this.gridData.value.selectable) {
-      this.gridData.value.selectable = [[], []];
+      this.assign(this.gridData, 'selectable', [[], []]);
     }
-    this.gridData.value.selectable[1] = selectable;
+    this.assign(this.gridData, ['selectable', 1], selectable);
     return result;
   }
 
@@ -574,9 +574,9 @@ class State {
       }
     }
     if (!this.gridData.value.selectable) {
-      this.gridData.value.selectable = [[], []];
+      this.assign(this.gridData, 'selectable', [[], []]);
     }
-    this.gridData.value.selectable[1] = selectable;
+    this.assign(this.gridData, ['selectable', 1], selectable);
     return result;
   }
 
@@ -584,7 +584,7 @@ class State {
     const selectable: boolean[][] = [[], [], []];
     let result = false;
     if (!this.hasAnotherLaneToSelect(x)) {
-      this.gridData.value.selectable = [[], []];
+      this.assign(this.gridData, 'selectable', [[], []]);
       return false;
     }
     for (let iy = 0; iy < 5; iy += 1) {
@@ -596,9 +596,9 @@ class State {
       }
     }
     if (!this.gridData.value.selectable) {
-      this.gridData.value.selectable = [[], []];
+      this.assign(this.gridData, 'selectable', [[], []]);
     }
-    this.gridData.value.selectable[1] = selectable;
+    this.assign(this.gridData, ['selectable', 1], selectable);
     return result;
   }
 
@@ -679,7 +679,7 @@ class State {
       }
     }
 
-    this.gridData.value.selectableCol = selectableCol;
+    this.assign(this.gridData, 'selectableCol', selectableCol);
     return selectableCol.includes(true);
   }
 
@@ -697,7 +697,7 @@ class State {
     ghosts[idx.x][idx.y] = true;
     this.assign(this.gridData, 'ghosts', ghosts);
     if (this.gridData.value.cardIDs) {
-      this.gridData.value.cardIDs[idx.x][idx.y] = undefined;
+      this.assign(this.gridData, ['cardIDs', idx.x, idx.y], undefined);
     }
   }
 
@@ -773,10 +773,10 @@ class State {
         if (idx > 0 && step === 1) {
           // show who won first
           if (!this.scoreData.value.result) {
-            this.scoreData.value.result = [];
+            this.assign(this.scoreData, 'result', []);
           }
           if (!this.gridData.value.overlay) {
-            this.gridData.value.overlay = [];
+            this.assign(this.gridData, 'overlay', []);
           }
           const result = this.scoreData.value.result[idx - 1];
           if (result === 'win') {
@@ -917,12 +917,33 @@ class State {
 
   // avoid unnecessary update
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private assign(obj: any, key: string, val: any): void {
-    const v1 = JSON.stringify(obj.value[key]);
+  private assign(obj: any, key: string | string[], val: any): void {
+    let v1 = '';
     const v2 = JSON.stringify(val);
-    console.log('key:', key, v1, 'vs', v2);
+
+    if (typeof key === 'string') {
+      v1 = JSON.stringify(obj.value[key]);
+    } else {
+      v1 = JSON.stringify(
+        key.reduce((acc, cur) => {
+          return acc[cur];
+        }, obj.value)
+      );
+    }
+
     if (v1 !== v2) {
-      obj.value[key] = val;
+      // obj.value[key] = val;
+      if (typeof key === 'string') {
+        obj.value[key] = val;
+      } else {
+        for (let i = 0; i < key.length; i += 1) {}
+        key.reduce((acc, cur, idx) => {
+          if (idx === key.length - 1) {
+            acc[cur] = val;
+          }
+          return acc[cur];
+        }, obj.value);
+      }
     }
   }
 }
