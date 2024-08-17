@@ -49,6 +49,10 @@ const ctrlBarDefs: { [barType in BarType]: CtrlBarDef } = {
     message: "Press 'Submit' to confirm.",
     buttonTypes: ['submit', 'cancel'],
   },
+  submitScoreConfirm: {
+    message: "Press 'Confirm' to continue.",
+    buttonTypes: ['confirm'],
+  },
 };
 
 const defaultCtrlBarData: CtrlBarData = {

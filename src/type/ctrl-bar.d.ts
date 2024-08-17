@@ -12,7 +12,8 @@ type BarType =
   | 'chooseTargetRa'
   | 'chooseTargetHeka1'
   | 'chooseTargetHeka2'
-  | 'submitActionConfirm';
+  | 'submitActionConfirm'
+  | 'submitScoreConfirm';
 
 interface CtrlBarDef {
   message: string;

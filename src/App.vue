@@ -6,7 +6,6 @@ import { Gamedata } from './type/gamedata.d';
 import { BgaRequest, BgaNotification } from './type/bga-interface.d';
 import { GridData } from './type/grid.d';
 import { HandData } from './type/hand.d';
-import { CtrlButtonData } from './type/ctrl-button.d';
 import { ScoreData } from './type/score.d';
 import { ReincarnationData } from './type/reincarnation.d';
 import { RoundData } from './type/round.d';
@@ -54,29 +53,6 @@ const handData: Ref<HandData> = ref({
   selectable: [],
   selected: [],
   active: false,
-});
-
-const ctrlButtonData: Ref<CtrlButtonData> = ref({
-  submit: {
-    active: true,
-    display: false,
-  },
-  cancel: {
-    active: true,
-    display: false,
-  },
-  mulligan: {
-    active: true,
-    display: false,
-  },
-  noMulligan: {
-    active: true,
-    display: false,
-  },
-  confirm: {
-    active: true,
-    display: false,
-  },
 });
 
 const scoreData: Ref<ScoreData> = ref({
@@ -178,7 +154,6 @@ const state: State = new State(
   gridData,
   handData,
   scoreData,
-  ctrlButtonData,
   reincarnationData,
   ctrlBarData
 );

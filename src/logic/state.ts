@@ -2,7 +2,6 @@ import type { Ref } from 'vue';
 import { GridData, CellOverlay } from '../type/grid.d';
 import { HandData } from '../type/hand.d';
 import { ScoreData } from '../type/score.d';
-import { CtrlButtonData } from '../type/ctrl-button.d';
 import { ReincarnationData } from '../type/reincarnation.d';
 import { CtrlBarData } from '../type/ctrl-bar.d';
 import { watch } from 'vue';
@@ -73,13 +72,12 @@ class State {
     private gridData: Ref<GridData>,
     private handData: Ref<HandData>,
     private scoreData: Ref<ScoreData>,
-    private ctrlButtonData: Ref<CtrlButtonData>,
     private reincarnationData: Ref<ReincarnationData>,
     private ctrlBarData: Ref<CtrlBarData>
   ) {
     this.throttledRefresh = throttle(this.refresh, 100, this);
     watch(
-      [this.gridData, this.handData, this.ctrlButtonData, this.scoreData],
+      [this.gridData, this.handData, this.scoreData],
       () => {
         // FIXME: there are too many of refresh calls
         this.throttledRefresh();
@@ -426,12 +424,11 @@ class State {
       }
 
       case 'endRound:afterAnim': {
-        // this.ctrlButtonData.value.confirm.display = true;
+        this.assign(this.ctrlBarData, 'type', 'submitScoreConfirm');
         break;
       }
 
       case 'endRound:submit': {
-        // this.ctrlButtonData.value.confirm.display = false;
         this.request('endRoundConfirm', {});
         this.setSubState('afterSubmit');
         break;

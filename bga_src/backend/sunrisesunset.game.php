@@ -518,7 +518,7 @@ class SunriseSunset extends Table
         $playerName = $this->getPlayerName($lPlayerID);
         self::notifyAllPlayers(
           'score',
-          clienttranslate('"the Evil" dealt 1 damage to ${playerName}.'),
+          clienttranslate('"Apofis" dealt 1 damage to ${playerName}.'),
           [
             'playerName' => $playerName,
           ]
@@ -534,7 +534,7 @@ class SunriseSunset extends Table
         $playerName = $this->getPlayerName($lPlayerID);
         self::notifyAllPlayers(
           'score',
-          clienttranslate('"the Agent" dealt 1 damage to ${playerName}.'),
+          clienttranslate('"Bastet" dealt 1 damage to ${playerName}.'),
           [
             'playerName' => $playerName,
           ]
@@ -860,7 +860,7 @@ class SunriseSunset extends Table
     $targetCardInfo['location_arg'] = $gridID;
 
     // move notification
-    $msg = clienttranslate('"the Maze" moved a stealth card.');
+    $msg = clienttranslate('"Heka" moved a stealth card.');
     self::notifyAllPlayers('moveCard', $msg, [
       'player_id' => $targetPlayerID,
       'player_name' => $this->getPlayerName($targetPlayerID),
@@ -1072,7 +1072,7 @@ class SunriseSunset extends Table
         self::notifyPlayer(
           $playerID,
           'logError',
-          clienttranslate('"the Creeps" cannot be discarded.'),
+          clienttranslate('"Anubis/Seth" cannot be discarded.'),
           []
         );
       }
@@ -1521,7 +1521,7 @@ class SunriseSunset extends Table
     $sql = 'SELECT round_side FROM round';
     $round_side = self::getUniqueValueFromDB($sql);
     if ($round_side == 'night') {
-      $result['score']['center'] = [5, 4, 1];
+      $result['score']['center'] = [1, 4, 5];
     }
 
     // get the controller (player) for each center
