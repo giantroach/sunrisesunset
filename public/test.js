@@ -1389,6 +1389,155 @@ const testEvent = [
       },
     ],
   },
+  {
+    name: 'endRound',
+    args: {
+      score: {
+        2348342: {
+          0: 4,
+          1: 5,
+          2: 1,
+          3: 6,
+          4: 3,
+          5: 9,
+        },
+        2348343: {
+          0: 3,
+          1: 5,
+          2: 2,
+          3: 4,
+          4: 7,
+          5: 1,
+        },
+        center: [2, 3, 6],
+      },
+      table: {
+        2348342: [
+          {
+            id: '0',
+            type: 'standard',
+            type_arg: '0',
+            location: 'table2348342',
+            location_arg: '0',
+          },
+          {
+            id: '1',
+            type: 'standard',
+            type_arg: '1',
+            location: 'table2348342',
+            location_arg: '1',
+          },
+          {
+            id: '2',
+            type: 'standard',
+            type_arg: '2',
+            location: 'table2348342',
+            location_arg: '2',
+          },
+          {
+            id: '0',
+            type: 'standard',
+            type_arg: '3',
+            location: 'table2348342',
+            location_arg: '3',
+          },
+          {
+            id: '1',
+            type: 'standard',
+            type_arg: '4',
+            location: 'table2348342',
+            location_arg: '4',
+          },
+          {
+            id: '2',
+            type: 'standard',
+            type_arg: '14',
+            location: 'table2348342',
+            location_arg: '5',
+          },
+        ],
+        2348343: [
+          {
+            id: '0',
+            type: 'standard',
+            type_arg: '6',
+            location: 'table2348343',
+            location_arg: '0',
+          },
+          {
+            id: '1',
+            type: 'standard',
+            type_arg: '7',
+            location: 'table2348343',
+            location_arg: '1',
+          },
+          {
+            id: '2',
+            type: 'standard',
+            type_arg: '8',
+            location: 'table2348343',
+            location_arg: '2',
+          },
+          {
+            id: '3',
+            type: 'standard',
+            type_arg: '9',
+            location: 'table2348343',
+            location_arg: '3',
+          },
+          {
+            id: '4',
+            type: 'standard',
+            type_arg: '10',
+            location: 'table2348343',
+            location_arg: '4',
+          },
+          {
+            id: '5',
+            type: 'standard',
+            type_arg: '13',
+            location: 'table2348343',
+            location_arg: '5',
+          },
+        ],
+      },
+      center: {
+        center: { location: 'center', controller: '2348342' },
+        left: { location: 'left', controller: '0' },
+        right: { location: 'right', controller: '2348343' },
+      },
+      day_or_night: 'day',
+    },
+  },
+  {
+    name: 'newRound',
+    args: {
+      player_cards: [],
+      center: {
+        center: { location: 'center', controller: '2348342' },
+        left: { location: 'left', controller: '0' },
+        right: { location: 'right', controller: '2348343' },
+      },
+      day_or_night: 'night',
+    },
+  },
+  {
+    "name": "playCard",
+    "args": {
+      "player_id": -1,
+      "player_name": "<!--PNS--><span class=\"playername\" style=\"color:#ff0000;\">giantroach0</span><!--PNE-->",
+      "card": {
+        "id": "15",
+        "type": "standard",
+        "type_arg": "6",
+        "location": "hand",
+        "location_arg": "2348342",
+        "meta": ""
+      },
+      "cards": "3",
+      "gridID": "0"
+    }
+  }
 ];
 
 function loadTestEvent(idx = 0) {

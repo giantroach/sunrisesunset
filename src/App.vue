@@ -10,13 +10,15 @@ import { CtrlButtonData } from './type/ctrl-button.d';
 import { ScoreData } from './type/score.d';
 import { ReincarnationData } from './type/reincarnation.d';
 import { RoundData } from './type/round.d';
+import { CtrlBarData } from './type/ctrl-bar.d';
 import { State, CurrentState } from './logic/state';
 import { Sub } from './logic/sub';
 import Hand from './components/Hand.vue';
 import Grid from './components/Grid.vue';
-import CtrlButton from './components/CtrlButton.vue';
+import CtrlBar from './components/CtrlBar.vue';
 import { objToArray } from './util/util';
 import cardsetImgUrl from './assets/cardset.png';
+import { defaultCtrlBarData } from './def/ctrlBar';
 
 let bgaRequest: Ref<BgaRequest> = ref({
   name: '',
@@ -92,6 +94,8 @@ const roundData: Ref<RoundData> = ref({
   round: 0,
   side: 'Day',
 });
+
+const ctrlBarData: Ref<CtrlBarData> = ref(structuredClone(defaultCtrlBarData));
 
 const gamedata: Ref<Gamedata> = ref({
   current_player_id: '',
@@ -175,7 +179,8 @@ const state: State = new State(
   handData,
   scoreData,
   ctrlButtonData,
-  reincarnationData
+  reincarnationData,
+  ctrlBarData
 );
 
 const restore = () => {
@@ -401,7 +406,7 @@ defineExpose({
   // init method
   restore,
   // game data
-  // ctrlBarData,
+  ctrlBarData,
   handData,
   gridData,
   ready,
@@ -425,41 +430,15 @@ defineExpose({
     </div>
 
     <div id="ctrl_buttons">
-      <CtrlButton
-        type="submit"
-        :active="ctrlButtonData.submit.active"
-        :display="ctrlButtonData.submit.display"
-        auraType="submit"
-        @btnClick="submitState()"
-      ></CtrlButton>
-      <CtrlButton
-        type="cancel"
-        :active="ctrlButtonData.cancel.active"
-        :display="ctrlButtonData.cancel.display"
-        auraType="cancel"
-        @btnClick="cancelState()"
-      ></CtrlButton>
-      <CtrlButton
-        type="mulligan"
-        :active="ctrlButtonData.mulligan.active"
-        :display="ctrlButtonData.mulligan.display"
-        auraType="submit"
-        @btnClick="submitState('submit')"
-      ></CtrlButton>
-      <CtrlButton
-        type="noMulligan"
-        :active="ctrlButtonData.noMulligan.active"
-        :display="ctrlButtonData.noMulligan.display"
-        auraType="cancel"
-        @btnClick="submitState()"
-      ></CtrlButton>
-      <CtrlButton
-        type="confirm"
-        :active="ctrlButtonData.confirm.active"
-        :display="ctrlButtonData.confirm.display"
-        auraType="submit"
-        @btnClick="submitState()"
-      ></CtrlButton>
+      <CtrlBar
+        :type="ctrlBarData.type"
+        @cancel="cancelState()"
+        @submit="submitState()"
+        @mulligan="submitState('submit')"
+        @noMulligan="submitState()"
+        @confirm="submitState()"
+      >
+      </CtrlBar>
     </div>
 
     <div id="player_hand" class="whiteblock">
@@ -502,12 +481,12 @@ defineExpose({
   text-align: left;
 }
 #ctrl_buttons {
-  height: 50px;
+  height: 92px;
   display: flex;
   justify-content: center;
 }
 #ctrl_buttons > * {
-  margin: 10px;
+  margin: 10px 0;
 }
 
 .whiteblock {

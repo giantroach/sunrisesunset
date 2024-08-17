@@ -323,7 +323,11 @@ const getOverlayPos = (overlay: Overlay[]): OverlayWithPos[] => {
             <GameCard
               :id="data.cardIDs?.[idx]?.[idy]?.cid"
               :prioritizeMini="true"
-              :ghost="data.ghosts && data.ghosts[idx] && data.ghosts[idx][idy]"
+              :ghost="
+                data.ghosts && data.ghosts[idx] && data.ghosts[idx][idy]
+                  ? true
+                  : false
+              "
               :detailPos="'right'"
               :selectable="
                 isSelectable(0, idx, idy) || isSelectable(1, idx, idy)
@@ -375,7 +379,7 @@ li.aura {
 }
 ul.grid {
   transform: scale(0.6);
-  margin: -120px 0;
+  margin: -140px 0;
 }
 li.grid-cell.selectable0 {
   border: 3px solid #00e9eb;

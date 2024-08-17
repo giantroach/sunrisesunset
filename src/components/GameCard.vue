@@ -42,7 +42,6 @@ let placeholderDefs!: TextPlaceholder[];
 let placeholderSize!: SizeDef;
 const selected: Ref<boolean> = ref(props.selected || false);
 const selectable: Ref<boolean> = ref(props.selectable);
-const ghost: Ref<boolean> = ref(props.ghost);
 const detailPos: Ref<'center' | 'right'> = ref(props.detailPos);
 const meta: Ref<CardMeta[]> = ref(props.meta || []);
 
@@ -260,7 +259,7 @@ const getFormatText = (text: string): string => {
         :id="'card-mini-' + id"
         class="card card-mini"
         :class="{
-          ghost: ghost,
+          ghost: props.ghost,
         }"
         v-bind:style="{
           width: miniDef.size.width,

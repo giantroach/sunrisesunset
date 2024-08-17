@@ -4,6 +4,7 @@ import { HandData } from '../type/hand.d';
 import { ScoreData } from '../type/score.d';
 import { CtrlButtonData } from '../type/ctrl-button.d';
 import { ReincarnationData } from '../type/reincarnation.d';
+import { CtrlBarData } from '../type/ctrl-bar.d';
 import { watch } from 'vue';
 import { cardUtil } from '../def/card';
 import { gridUtil } from '../def/grid';
@@ -73,7 +74,8 @@ class State {
     private handData: Ref<HandData>,
     private scoreData: Ref<ScoreData>,
     private ctrlButtonData: Ref<CtrlButtonData>,
-    private reincarnationData: Ref<ReincarnationData>
+    private reincarnationData: Ref<ReincarnationData>,
+    private ctrlBarData: Ref<CtrlBarData>
   ) {
     this.throttledRefresh = throttle(this.refresh, 100, this);
     watch(
@@ -92,6 +94,7 @@ class State {
   public throttledRefresh: any;
 
   public refresh() {
+    console.log(`this.current`, this.current);
     switch (this.current) {
       case 'waitingForOtherPlayer':
         this.assign(this.handData, 'active', false);
@@ -114,7 +117,7 @@ class State {
             c.cid !== 'mainCard13' && c.cid !== 'mainCard14';
         });
         this.setSubState('beforeCardSelect');
-        this.ctrlButtonData.value.noMulligan.display = true;
+        this.assign(this.ctrlBarData, 'type', 'mulligan');
         break;
       }
 
@@ -132,10 +135,7 @@ class State {
         this.assign(this.gridData, 'selectableCol', []);
         this.assign(this.gridData, 'ghosts', []);
         this.setSubState('beforeCardSelect');
-        this.ctrlButtonData.value.submit.display = false;
-        this.ctrlButtonData.value.cancel.display = false;
-        this.ctrlButtonData.value.mulligan.display = false;
-        this.ctrlButtonData.value.noMulligan.display = false;
+        this.assign(this.ctrlBarData, 'type', 'turnInit');
         break;
 
       case 'reincarnationTurn:init': {
@@ -160,8 +160,6 @@ class State {
         this.assign(this.gridData, 'selectableCol', []);
         this.assign(this.gridData, 'ghosts', []);
         this.setSubState('beforeCardSelect');
-        this.ctrlButtonData.value.submit.display = false;
-        this.ctrlButtonData.value.cancel.display = false;
         break;
       }
 
@@ -176,16 +174,14 @@ class State {
 
       case 'mulligan:afterCardSelect':
         if (!this.handData.value.selected?.includes(true)) {
-          this.ctrlButtonData.value.mulligan.display = false;
           this.setSubState('beforeCardSelect');
           break;
         }
-        this.ctrlButtonData.value.mulligan.display = true;
+        this.assign(this.ctrlBarData, 'type', 'mulligan');
         break;
 
       case 'playerTurn:afterCardSelect':
       case 'reincarnationTurn:afterCardSelect':
-        this.ctrlButtonData.value.cancel.display = true;
         this.setSubState('beforeGridSelect');
         break;
 
@@ -207,6 +203,7 @@ class State {
         }
         this.assign(this.gridData, 'active', true);
         this.setPlayerGridSelectable();
+        this.assign(this.ctrlBarData, 'type', 'chooseGrid');
         break;
 
       case 'playerTurn:afterGridSelect':
@@ -264,6 +261,7 @@ class State {
         });
         if (targetSelected) {
           if (def.onPlay === 'TargetSameLaneToAnother:Maze') {
+            this.assign(this.ctrlBarData, 'type', 'chooseTargetHeka2');
             this.setSubState('beforeTargetSelect2');
             break;
           } else {
@@ -276,6 +274,7 @@ class State {
 
         switch (def.onPlay) {
           case 'TargetSameLane:Silence': {
+            this.assign(this.ctrlBarData, 'type', 'chooseTargetAnubis');
             if (!this.setTargetSameLane(x)) {
               this.setSubState('afterTargetSelect');
               break;
@@ -283,6 +282,7 @@ class State {
             break;
           }
           case 'TargetNonStealthSameLane:Reincanate': {
+            this.assign(this.ctrlBarData, 'type', 'chooseTargetIsis');
             if (!this.setTargetSameLaneNonStealth(x, y)) {
               this.setSubState('afterTargetSelect');
               break;
@@ -290,6 +290,7 @@ class State {
             break;
           }
           case 'TargeAnytStealth:Reveal': {
+            this.assign(this.ctrlBarData, 'type', 'chooseTargetRa');
             if (!this.setTargetAnyStealth()) {
               this.setSubState('afterTargetSelect');
               break;
@@ -297,6 +298,7 @@ class State {
             break;
           }
           case 'TargetSameLaneToAnother:Maze': {
+            this.assign(this.ctrlBarData, 'type', 'chooseTargetHeka1');
             if (!this.setTargetSameLaneStealth(x)) {
               this.setSubState('afterTargetSelect');
               break;
@@ -338,7 +340,7 @@ class State {
           throw 'unexpected state';
         }
 
-        this.ctrlButtonData.value.submit.display = true;
+        this.assign(this.ctrlBarData, 'type', 'submitActionConfirm');
         this.assign(this.gridData, 'selectable', []);
         break;
       }
@@ -400,9 +402,11 @@ class State {
       case 'mulligan:afterSubmit':
         this.assign(this.handData, 'selected', []);
         break;
+
       case 'playerTurn:afterSubmit': {
         break;
       }
+
       case 'reincarnationTurn:afterSubmit': {
         this.reincarnationData.value.reincarnatedCardID = null;
         this.reincarnationData.value.reincarnatedCol = null;
@@ -422,12 +426,12 @@ class State {
       }
 
       case 'endRound:afterAnim': {
-        this.ctrlButtonData.value.confirm.display = true;
+        // this.ctrlButtonData.value.confirm.display = true;
         break;
       }
 
       case 'endRound:submit': {
-        this.ctrlButtonData.value.confirm.display = false;
+        // this.ctrlButtonData.value.confirm.display = false;
         this.request('endRoundConfirm', {});
         this.setSubState('afterSubmit');
         break;
@@ -451,48 +455,41 @@ class State {
   }
 
   public cancelState(): void {
+    this.assign(this.ctrlBarData, 'type', '');
+
     if (/^playerTurn/.test(this.current)) {
       this.current = 'playerTurn:init';
-      this.ctrlButtonData.value.cancel.display = false;
-      this.ctrlButtonData.value.submit.display = false;
       this.undoPlayedCard();
       this.throttledRefresh();
     }
     if (/^reincarnationTurn/.test(this.current)) {
       this.current = 'reincarnationTurn:init';
-      this.ctrlButtonData.value.cancel.display = false;
-      this.ctrlButtonData.value.submit.display = false;
       this.undoPlayedCard();
       this.throttledRefresh();
     }
   }
 
   public submitState(mode?: string): void {
+    this.assign(this.ctrlBarData, 'type', '');
+
     if (/^mulligan/.test(this.current)) {
       if (mode === 'submit') {
         this.current = 'mulligan:submit';
       } else {
         this.current = 'mulligan:submitNoMulligan';
       }
-      this.ctrlButtonData.value.mulligan.display = false;
-      this.ctrlButtonData.value.noMulligan.display = false;
       this.throttledRefresh();
     }
     if (/^playerTurn/.test(this.current)) {
       this.current = 'playerTurn:submit';
-      this.ctrlButtonData.value.cancel.display = false;
-      this.ctrlButtonData.value.submit.display = false;
       this.throttledRefresh();
     }
     if (/^reincarnationTurn/.test(this.current)) {
       this.current = 'reincarnationTurn:submit';
-      this.ctrlButtonData.value.cancel.display = false;
-      this.ctrlButtonData.value.submit.display = false;
       this.throttledRefresh();
     }
     if (/^endRound/.test(this.current)) {
       this.current = 'endRound:submit';
-      this.ctrlButtonData.value.confirm.display = false;
       this.throttledRefresh();
     }
   }
@@ -773,10 +770,14 @@ class State {
         if (idx > 0 && step === 1) {
           // show who won first
           if (!this.scoreData.value.result) {
-            this.assign(this.scoreData, 'result', []);
+            // Do not use assign here, we know it changes + TS2532
+            // this.assign(this.scoreData, 'result', []);
+            this.scoreData.value.result = [];
           }
           if (!this.gridData.value.overlay) {
-            this.assign(this.gridData, 'overlay', []);
+            // Do not use assign here, we know it changes + TS2532
+            // this.assign(this.gridData, 'overlay', []);
+            this.gridData.value.overlay = [];
           }
           const result = this.scoreData.value.result[idx - 1];
           if (result === 'win') {
@@ -917,32 +918,35 @@ class State {
 
   // avoid unnecessary update
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private assign(obj: any, key: string | string[], val: any): void {
+  private assign(
+    obj: any,
+    key: string | number | Array<string | number>,
+    val: any
+  ): void {
     let v1 = '';
     const v2 = JSON.stringify(val);
 
-    if (typeof key === 'string') {
-      v1 = JSON.stringify(obj.value[key]);
-    } else {
+    if (typeof key === 'object') {
       v1 = JSON.stringify(
         key.reduce((acc, cur) => {
           return acc[cur];
         }, obj.value)
       );
+    } else {
+      v1 = JSON.stringify(obj.value[key]);
     }
 
     if (v1 !== v2) {
-      // obj.value[key] = val;
-      if (typeof key === 'string') {
-        obj.value[key] = val;
-      } else {
-        for (let i = 0; i < key.length; i += 1) {}
+      if (typeof key === 'object') {
         key.reduce((acc, cur, idx) => {
           if (idx === key.length - 1) {
             acc[cur] = val;
           }
           return acc[cur];
-        }, obj.value);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }, obj.value as any);
+      } else {
+        obj.value[key] = val;
       }
     }
   }

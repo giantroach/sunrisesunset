@@ -118,10 +118,10 @@ $machinestates = [
   31 => [
     'name' => 'reincarnationTurn',
     'description' => clienttranslate(
-      '${actplayer} must play the reincarnated card.'
+      '${actplayer} must play the newly drawn card.'
     ),
     'descriptionmyturn' => clienttranslate(
-      '${you} must play the reincarnated card.'
+      '${you} must play the newly drawn card.'
     ),
     'type' => 'activeplayer',
     'possibleactions' => ['playCard'],

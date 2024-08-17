@@ -110,6 +110,9 @@ export class Sub {
               meta: [],
             };
           }
+          if (this.gridData.value.ghosts?.[col]?.[row]) {
+            this.gridData.value.ghosts[col][row] = false;
+          }
         } else {
           const row = 1 - Math.floor(gridID / 3);
           const col = gridID % 3;

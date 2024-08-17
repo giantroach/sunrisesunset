@@ -951,7 +951,7 @@ class SunriseSunset extends Table
     // remove card from a table
     $this->cards->moveCard($targetCard['id'], 'discard', 0);
     $newCard = $this->cards->pickCard('deck', $targetPlayerID);
-    $msg = clienttranslate('"the Reincarnation" removed "${card_name}".');
+    $msg = clienttranslate('"Isis" removed "${card_name}".');
     // this cannot be AllPlayers
     self::notifyPlayer($targetPlayerID, 'reincarnateCard', $msg, [
       'player_id' => $targetPlayerID,
