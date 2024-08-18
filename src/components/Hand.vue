@@ -38,7 +38,7 @@ const hideDetail = (): void => {
   focused.value = [];
 };
 
-const selectExcept = (idx: number): void => {
+const unselectExcept = (idx: number): void => {
   props.selected.forEach((_s, i) => {
     if (i === idx) {
       return;
@@ -55,7 +55,7 @@ const selectHand = (idx: number): void => {
   props.selected[idx] = !props.selected[idx];
   if (props.selected[idx]) {
     if (props.exclusiveSelect) {
-      selectExcept(idx);
+      unselectExcept(idx);
     }
     emit('selectHand', idx);
   }

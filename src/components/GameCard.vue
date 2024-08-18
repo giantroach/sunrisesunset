@@ -40,8 +40,6 @@ let prioritizeMini: Ref<boolean> = ref(props.prioritizeMini);
 let miniDef!: MiniDef | null;
 let placeholderDefs!: TextPlaceholder[];
 let placeholderSize!: SizeDef;
-const selected: Ref<boolean> = ref(props.selected || false);
-const selectable: Ref<boolean> = ref(props.selectable);
 const detailPos: Ref<'center' | 'right'> = ref(props.detailPos);
 const meta: Ref<CardMeta[]> = ref(props.meta || []);
 
@@ -120,6 +118,9 @@ watch(
 );
 // };
 
+// secure modal not to close before anim done
+let duringAnim = false;
+
 const showDetails = (evt: MouseEvent | TouchEvent) => {
   if (onlyMini.value) {
     return;
@@ -145,6 +146,10 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     centerX = rect.left + window.scrollX + rect.width / 2;
   }
   modal.value = true;
+  duringAnim = true;
+  setTimeout(() => {
+    duringAnim = false;
+  }, 1000);
 
   setTimeout(() => {
     // wait for render
@@ -176,7 +181,9 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
 };
 
 const selectCard = (): void => {
-  hideDetails();
+  if (!duringAnim) {
+    hideDetails(); // FIXME this shouldn't trigger during the anim
+  }
   lastTimeHideDetails = Number(new Date());
   if (!props.selectable) {
     return;
@@ -289,8 +296,8 @@ const getFormatText = (text: string): string => {
       :id="'card-modal-' + id"
       class="card card-modal"
       :class="{
-        selectable: !selected && selectable,
-        selected: selected,
+        selectable: !props.selected && selectable,
+        selected: props.selected,
       }"
       v-bind:style="{
         width: size.width,
