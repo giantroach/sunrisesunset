@@ -261,6 +261,10 @@ define([
       // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
       //
 
+      dojo.subscribe("updateScore", this, (data) => {
+        this.scoreCtrl[data.args.playerID].incValue(1);
+      });
+
       const notifications = [
         'newRound',
         'mulligan',
