@@ -41,7 +41,6 @@ let miniDef!: MiniDef | null;
 let placeholderDefs!: TextPlaceholder[];
 let placeholderSize!: SizeDef;
 const detailPos: Ref<'center' | 'right'> = ref(props.detailPos);
-const meta: Ref<CardMeta[]> = ref(props.meta || []);
 
 const modal: Ref<boolean> = ref(false);
 const modalTop: Ref<number> = ref(-10000);
@@ -282,10 +281,11 @@ const getFormatText = (text: string): string => {
       >
         <div
           class="detail-meta-mini"
-          v-if="meta && meta.length"
+          v-if="props.meta && props.meta.length"
           v-bind:style="{}"
         >
-          ⚠️
+          <template v-if="props.meta[0].metaID === 'stealth'"> ℹ️ </template>
+          <template v-if="props.meta[0].metaID !== 'stealth'"> ⚠️ </template>
         </div>
       </div>
     </template>
@@ -426,6 +426,7 @@ ul.detail-meta-modal {
     text-align: left;
     margin-bottom: 5px;
     padding: 5px;
+    font-size: small;
   }
 }
 </style>

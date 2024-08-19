@@ -194,10 +194,16 @@ const cardDefs: { [cardType: string]: CardDef } = {
 
 const cardMetaDefs: { [cardMetaID: string]: CardMetaDef } = {
   oracle: {
-    text: 'Stealth and the ${Combat} ability are disabled.',
+    text: 'Stealth and the ability are disabled by "Anubis".',
+    type: 'warn',
   },
   watcher: {
-    text: 'Stealth is disabled.',
+    text: 'Stealth is disabled by "Ra".',
+    type: 'warn',
+  },
+  stealth: {
+    text: 'Because of stealth, the contents of this card are invisible to your opponent.',
+    type: 'info',
   },
 };
 

@@ -100,6 +100,7 @@ class State {
         this.assign(this.gridData, 'active', false);
         this.assign(this.gridData, 'selected', []);
         this.assign(this.gridData, 'ghosts', []);
+        this.assign(this.ctrlBarData, 'type', 'waitingOppo');
         break;
 
       case 'mulligan:init': {
@@ -436,6 +437,7 @@ class State {
 
       case 'endRound:afterSubmit': {
         this.assign(this.handData, 'selected', []);
+        this.assign(this.ctrlBarData, 'type', 'waitingOppo');
         break;
       }
     }

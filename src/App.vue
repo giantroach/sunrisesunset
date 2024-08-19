@@ -10,6 +10,7 @@ import { ScoreData } from './type/score.d';
 import { ReincarnationData } from './type/reincarnation.d';
 import { RoundData } from './type/round.d';
 import { CtrlBarData } from './type/ctrl-bar.d';
+import { CardMeta } from './type/card.d';
 import { State, CurrentState } from './logic/state';
 import { Sub } from './logic/sub';
 import Hand from './components/Hand.vue';
@@ -18,6 +19,7 @@ import CtrlBar from './components/CtrlBar.vue';
 import { objToArray } from './util/util';
 import cardsetImgUrl from './assets/cardset.png';
 import { defaultCtrlBarData } from './def/ctrlBar';
+import { cardDefs } from './def/card';
 
 let bgaRequest: Ref<BgaRequest> = ref({
   name: '',
@@ -191,6 +193,22 @@ const restore = () => {
       [undefined, undefined, { cid: 'centerCard2', meta: [] }],
     ];
   }
+
+  const getMeta = (meta: string | undefined, cardType: string): CardMeta[] => {
+    if (!meta) {
+      if (cardDefs.mainCard.details?.[Number(cardType)]?.stealth) {
+        return [{metaID: 'stealth'}];
+      }
+      return [];
+    }
+
+    return meta.split(',').map((m) => {
+      return {
+        metaID: m,
+      };
+    });
+  };
+
   gamedata.value.player_table.forEach((c) => {
     const gridID = Number(c.location_arg);
     const row = Math.floor(gridID / 3) + 3;
@@ -201,13 +219,7 @@ const restore = () => {
     gridData.value.cardIDs[col][row] = {
       id: c.id,
       cid: `mainCard${c.type_arg}`,
-      meta: !c.meta
-        ? []
-        : c.meta.split(',').map((m) => {
-            return {
-              metaID: m,
-            };
-          }),
+    meta: getMeta(c.meta, c.type_arg),
     };
   });
   gamedata.value.oppo_table.forEach((c) => {
@@ -456,12 +468,12 @@ defineExpose({
   text-align: left;
 }
 #ctrl_buttons {
-  height: 92px;
+  height: 72px;
   display: flex;
   justify-content: center;
 }
 #ctrl_buttons > * {
-  margin: 10px 0;
+  margin: 0;
 }
 
 .whiteblock {

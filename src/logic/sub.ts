@@ -17,6 +17,7 @@ import { HandData } from '../type/hand.d';
 import { ScoreData, ScoreResult } from '../type/score.d';
 import { ReincarnationData } from '../type/reincarnation.d';
 import { RoundData } from '../type/round.d';
+import { cardDefs } from '../def/card';
 
 //
 // Sub handles BGA notifications and apply data accordingly.
@@ -105,9 +106,12 @@ export class Sub {
           const row = Math.floor(gridID / 3) + 3;
           const col = gridID % 3;
           if (this.gridData.value.cardIDs) {
+            const cid = arg.card.type_arg;
+            const hasStealth =
+              cardDefs.mainCard.details?.[Number(cid)]?.stealth;
             this.gridData.value.cardIDs[col][row] = {
               cid: `mainCard${arg.card.type_arg}`,
-              meta: [],
+              meta: hasStealth ? [{ metaID: 'stealth' }] : [],
             };
           }
           if (this.gridData.value.ghosts?.[col]?.[row]) {

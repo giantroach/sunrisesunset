@@ -71,6 +71,7 @@ interface MiniDef {
 
 interface CardMetaDef {
   text: string;
+  type: 'warn' | 'info';
 }
 
 export { SizeDef, TextPlaceholder, TextLayoutDef, CardDetail, CardDef, MiniDef, CardMetaDef };

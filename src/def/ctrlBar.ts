@@ -9,6 +9,10 @@ const ctrlBarDefs: { [barType in BarType]: CtrlBarDef } = {
     message: '',
     buttonTypes: ['cancel'],
   },
+  waitingOppo: {
+    message: 'Wait for your turn.',
+    buttonTypes: [],
+  },
   turnInit: {
     message: 'Choose a card to play.',
     buttonTypes: [],
