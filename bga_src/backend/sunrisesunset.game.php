@@ -385,7 +385,7 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] center number is set to 0 by "the Plague".'
+          '[${lane} lane] center number is set to 0 by "La Plaga".'
         ),
         [
           'lane' => $lane,
@@ -398,7 +398,7 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] center number is increased by 1 by "the Justice".'
+          '[${lane} lane] center number is increased by 1 by "Maat".'
         ),
         [
           'lane' => $lane,
@@ -411,7 +411,7 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] center number is decreased by 2 by "the Shadow".'
+          '[${lane} lane] center number is decreased by 2 by "El Libro de los Muertos".'
         ),
         [
           'lane' => $lane,
@@ -441,7 +441,7 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] "the Unstable" became power 15 since center is ${center}.'
+          '[${lane} lane] "Apis" became power 15 since center is ${center}.'
         ),
         [
           'lane' => $lane,
@@ -740,11 +740,11 @@ class SunriseSunset extends Table
 
     // reveal notification
     $msg = clienttranslate(
-      '"the Oracle" disabled stealth and [Combat] ability of "${cardName}".'
+      '"Anubis" disabled stealth and ability of "${cardName}".'
     );
     if ($cardName === 'watcher') {
       $msg = clienttranslate(
-        '"the Watcher" disabled stealth of "${cardName}".'
+        '"Ra" disabled stealth of "${cardName}".'
       );
     }
     $cardDef = $this->card_types[intval($targetCardInfo['type_arg'])];
@@ -1722,7 +1722,7 @@ class SunriseSunset extends Table
           if ($hasEclipse[$pos] && abs($score2 - $score1) >= 4) {
             $this->notifyScore(
               clienttranslate(
-                '[${lane} lane] ${scoreA} vs ${scoreB}. Tied (tied by "the Eclipse").'
+                '[${lane} lane] ${scoreA} vs ${scoreB}. Tied (tied by "Eclipse").'
               ),
               $lane,
               $scores,
@@ -1739,7 +1739,7 @@ class SunriseSunset extends Table
             if ($hasTitan[$pos]) {
               $this->notifyScore(
                 clienttranslate(
-                  '[${lane} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won. (lower won due to "the Titan").'
+                  '[${lane} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won. (lower won due to "Osiris").'
                 ),
                 $lane,
                 $scores,
@@ -1785,7 +1785,7 @@ class SunriseSunset extends Table
             if ($hasTitan[$pos]) {
               $this->notifyScore(
                 clienttranslate(
-                  '[${lane} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won (lower won due to "the Titan").'
+                  '[${lane} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won (lower won due to "Osiris").'
                 ),
                 $lane,
                 $scores,
