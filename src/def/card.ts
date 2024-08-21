@@ -75,7 +75,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
           fixed: 3,
           center: 1,
         },
-        onPlay: 'TargeAnytStealth:Reveal',
+        onPlay: 'TargetAnyStealth:Reveal',
         stealth: false,
       },
       6: {

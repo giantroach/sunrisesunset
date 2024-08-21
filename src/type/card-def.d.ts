@@ -19,7 +19,7 @@ interface TextLayoutDef {
 type OnPlay =
   | 'TargetSameLane:Silence'
   | 'TargetNonStealthSameLane:Reincanate'
-  | 'TargeAnytStealth:Reveal'
+  | 'TargetAnyStealth:Reveal'
   | 'TargetSameLaneToAnother:Maze';
 type OnResolution =
   | 'IncleaseCenterBy1'

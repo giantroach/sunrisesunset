@@ -288,7 +288,7 @@ class State {
             }
             break;
           }
-          case 'TargeAnytStealth:Reveal': {
+          case 'TargetAnyStealth:Reveal': {
             this.assign(this.ctrlBarData, 'type', 'chooseTargetRa');
             if (!this.setTargetAnyStealth()) {
               this.setSubState('afterTargetSelect');
@@ -648,7 +648,14 @@ class State {
       return null;
     }
     const cDetail = cardUtil.getCard(cid);
-    if (cDetail.stealth && !c.meta?.length) {
+    if (cDetail.stealth) {
+      if (c.meta?.length) {
+        if (c.meta[0].metaID === 'stealth') {
+          return true;
+        } else {
+          return false;
+        }
+      }
       return true;
     }
     return false;
