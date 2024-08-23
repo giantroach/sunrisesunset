@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ref, inject, ref } from 'vue';
+import { Ref, inject, ref, onUnmounted } from 'vue';
 import { Overlay, GridData } from '../type/grid.d';
 import { SizeDef, MarginDef, GridDef } from '../type/grid-def.d';
 import { throttle } from '../util/util';
@@ -46,6 +46,21 @@ const formatMarginCol = (margin: MarginDef): string => {
 const marginCol: string = formatMarginCol(def.margin);
 
 const colRef = ref([]);
+
+const resized = ref(1);
+
+const onResize = throttle(
+  () => {
+    resized.value += 1;
+  },
+  100,
+  this
+);
+
+window.addEventListener('resize', onResize);
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize);
+});
 
 const parseLayoutStr = (layoutStr: string): number[][] => {
   const match = /(\d+)x(\d+)/g.exec(layoutStr);
@@ -341,8 +356,8 @@ const getOverlayPos = (overlay: Overlay[]): OverlayWithPos[] => {
     </li>
   </ul>
 
-  <teleport to="body" v-if="data.overlay && data.overlay.length">
-    <template v-for="(o, _i) in getOverlayPos(data.overlay)" :key="i">
+  <teleport to="body" v-if="resized && data.overlay && data.overlay.length">
+    <template v-for="(o, _i) in getOverlayPos(data.overlay)" :key="_i">
       <div
         class="overlay"
         :class="o.cssClass || ''"

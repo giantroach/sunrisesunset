@@ -1,4 +1,5 @@
 const testDataBase = {};
+const playerID = 2348342;
 
 const testData = [
   {
@@ -1366,10 +1367,288 @@ const testData = [
       },
     },
   },
+
+  {
+    players: {
+      2348342: {
+        id: '2348342',
+        score: '0',
+        cards: 2,
+        color: 'ff0000',
+        color_back: null,
+        name: 'giantroach0',
+        avatar: '000000',
+        zombie: 0,
+        eliminated: 0,
+        is_ai: '0',
+        beginner: true,
+        ack: 'ack',
+      },
+      2348343: {
+        id: '2348343',
+        score: '0',
+        cards: 2,
+        color: '008000',
+        color_back: null,
+        name: 'giantroach1',
+        avatar: '000000',
+        zombie: 0,
+        eliminated: 0,
+        is_ai: '0',
+        beginner: true,
+        ack: 'ack',
+      },
+    },
+    player_cards: [
+      {
+        id: '10',
+        type: 'standard',
+        type_arg: '1',
+        location: 'hand',
+        location_arg: '2348342',
+      },
+      {
+        id: '11',
+        type: 'standard',
+        type_arg: '5',
+        location: 'hand',
+        location_arg: '2348342',
+      },
+    ],
+    player_table: [
+      {
+        id: '1',
+        type: 'creep',
+        type_arg: '14',
+        location: 'table2348342',
+        location_arg: '0',
+        meta: '',
+      },
+      {
+        id: '3',
+        type: 'standard',
+        type_arg: '11',
+        location: 'table2348342',
+        location_arg: '3',
+        meta: '',
+      },
+      {
+        id: '4',
+        type: 'standard',
+        type_arg: '7',
+        location: 'table2348342',
+        location_arg: '2',
+        meta: '',
+      },
+      {
+        id: '13',
+        type: 'standard',
+        type_arg: '0',
+        location: 'table2348342',
+        location_arg: '5',
+        meta: '',
+      },
+    ],
+    oppo_table: [
+      {
+        id: '2',
+        type: 'standard',
+        type_arg: '4',
+        location: 'table2348343',
+        location_arg: '2',
+        meta: 'oracle,',
+      },
+      {
+        id: '9',
+        type: 'standard',
+        type_arg: '9',
+        location: 'table2348343',
+        location_arg: '5',
+        meta: '',
+      },
+      {
+        id: '12',
+        type: 'standard',
+        type_arg: '8',
+        location: 'table2348343',
+        location_arg: '1',
+        meta: '',
+      },
+      {
+        id: '15',
+        type: 'standard',
+        type_arg: '10',
+        location: 'table2348343',
+        location_arg: '0',
+        meta: '',
+      },
+    ],
+    day_or_night: 'day',
+    round: '1',
+    center: {
+      left: {
+        location: 'left',
+        controller: '0',
+      },
+      center: {
+        location: 'center',
+        controller: '0',
+      },
+      right: {
+        location: 'right',
+        controller: '0',
+      },
+    },
+    player_side: 'sun',
+    player_id: 2348342,
+    gamestate: {
+      id: '21',
+      active_player: '2348342',
+      args: null,
+      reflexion: {
+        total: {
+          2348342: 92,
+          2348343: '-256',
+        },
+        initial: {
+          2348342: 113,
+        },
+        initial_ts: {
+          2348342: 1724236875781,
+        },
+      },
+      updateGameProgression: 0,
+      name: 'playerTurn',
+      description: '${actplayer} must play a card.',
+      descriptionmyturn: '${you} must play a card.',
+      type: 'activeplayer',
+      possibleactions: ['playCard'],
+      transitions: {
+        nextPlayer: 22,
+        zombiePass: 22,
+        reincarnation: 32,
+      },
+    },
+    tablespeed: '1',
+    game_result_neutralized: '0',
+    neutralized_player_id: '0',
+    playerorder: ['2348342', 2348343],
+    gamestates: {
+      1: {
+        name: 'gameSetup',
+        description: '',
+        type: 'manager',
+        action: 'stGameSetup',
+        transitions: {
+          roundSetup: 2,
+        },
+      },
+      2: {
+        name: 'roundSetup',
+        type: 'game',
+        action: 'stRoundSetup',
+        updateGameProgression: true,
+        transitions: {
+          mulliganTurn: 11,
+        },
+      },
+      11: {
+        name: 'mulliganTurn',
+        description: '${actplayer} may discard to draw a new card.',
+        descriptionmyturn: '${you} may discard a card to draw a new card.',
+        type: 'activeplayer',
+        possibleactions: ['mulligan'],
+        transitions: {
+          mulliganNextPlayer: 12,
+          nextPlayer: 22,
+          zombiePass: 22,
+        },
+      },
+      12: {
+        name: 'mulliganNextPlayer',
+        type: 'game',
+        action: 'stMulliganNextPlayer',
+        updateGameProgression: true,
+        transitions: {
+          mulliganTurn: 11,
+        },
+      },
+      21: {
+        name: 'playerTurn',
+        description: '${actplayer} must play a card.',
+        descriptionmyturn: '${you} must play a card.',
+        type: 'activeplayer',
+        possibleactions: ['playCard'],
+        transitions: {
+          nextPlayer: 22,
+          zombiePass: 22,
+          reincarnation: 32,
+        },
+      },
+      22: {
+        name: 'nextPlayer',
+        type: 'game',
+        action: 'stNextPlayer',
+        updateGameProgression: true,
+        transitions: {
+          playerTurn: 21,
+          endRound: 51,
+        },
+      },
+      31: {
+        name: 'reincarnationTurn',
+        description: '${actplayer} must play the newly drawn card.',
+        descriptionmyturn: '${you} must play the newly drawn card.',
+        type: 'activeplayer',
+        possibleactions: ['playCard'],
+        transitions: {
+          nextPlayer: 22,
+          zombiePass: 22,
+        },
+      },
+      32: {
+        name: 'reincarnation',
+        type: 'game',
+        action: 'stReincarnationNextPlayer',
+        updateGameProgression: true,
+        transitions: {
+          reincarnationTurn: 31,
+        },
+      },
+      51: {
+        name: 'endRound',
+        description: '${actplayer} is confirming the result.',
+        descriptionmyturn: 'Press "Confirm" to continue.',
+        type: 'multipleactiveplayer',
+        action: 'stEndRound',
+        updateGameProgression: true,
+        possibleactions: ['endRoundConfirm'],
+        transitions: {
+          roundSetup: 2,
+          endGame: 99,
+        },
+      },
+      99: {
+        name: 'gameEnd',
+        description: 'End of game',
+        type: 'manager',
+        action: 'stGameEnd',
+        args: 'argGameEnd',
+      },
+    },
+    notifications: {
+      last_packet_id: '35',
+      move_nbr: '11',
+    },
+    decision: {
+      decision_type: 'none',
+    },
+  },
 ];
 
 function loadTestData(idx = 0) {
   const vue = window.vue;
+  vue.playerID = playerID;
   vue.gamedata = testData[idx];
   // vue.restore();
   vue.state.current = 'playerTurn:init';
@@ -1522,27 +1801,215 @@ const testEvent = [
     },
   },
   {
-    "name": "playCard",
-    "args": {
-      "player_id": -1,
-      "player_name": "<!--PNS--><span class=\"playername\" style=\"color:#ff0000;\">giantroach0</span><!--PNE-->",
-      "card": {
-        "id": "15",
-        "type": "standard",
-        "type_arg": "6",
-        "location": "hand",
-        "location_arg": "2348342",
-        "meta": ""
+    name: 'playCard',
+    args: {
+      player_id: 2348342,
+      player_name:
+        '<!--PNS--><span class="playername" style="color:#ff0000;">giantroach0</span><!--PNE-->',
+      card: {
+        id: '15',
+        type: 'standard',
+        type_arg: '13',
+        location: 'hand',
+        location_arg: '2348342',
+        meta: '',
       },
-      "cards": "3",
-      "gridID": "0"
-    }
-  }
+      cards: '3',
+      gridID: '0',
+    },
+  },
+  {
+    name: 'score + endRound',
+    seqEvts: [
+      {
+        name: 'score',
+        args: {
+          lane: 'left',
+          scoreA: 9,
+          scoreB: 4,
+          wPlayerName: null,
+          w_player_id: 'tie',
+        },
+      },
+      {
+        name: 'score',
+        args: {
+          lane: 'center',
+          scoreA: 4,
+          scoreB: 8,
+          wPlayerName: 'giantroach1',
+          w_player_id: 2348343,
+        },
+      },
+      {
+        name: 'score',
+        args: {
+          lane: 'right',
+          scoreA: 25,
+          scoreB: 16,
+          wPlayerName: 'giantroach1',
+          w_player_id: 2348343,
+        },
+      },
+      {
+        name: 'endRound',
+        args: {
+          score: {
+            2348342: {
+              0: 2,
+              1: 1,
+              2: 14,
+              3: 2,
+              4: 7,
+              5: 2,
+            },
+            2348343: {
+              0: 5,
+              1: 3,
+              2: 4,
+              3: 4,
+              4: 1,
+              5: 21,
+            },
+            center: [2, 0, 7],
+          },
+          table: {
+            2348342: [
+              {
+                id: '1',
+                type: 'standard',
+                type_arg: '4',
+                location: 'table2348342',
+                location_arg: '0',
+                meta: 'oracle,',
+              },
+              {
+                id: '2',
+                type: 'standard',
+                type_arg: '7',
+                location: 'table2348342',
+                location_arg: '3',
+                meta: '',
+              },
+              {
+                id: '4',
+                type: 'creep',
+                type_arg: '13',
+                location: 'table2348342',
+                location_arg: '1',
+                meta: '',
+              },
+              {
+                id: '8',
+                type: 'standard',
+                type_arg: '10',
+                location: 'table2348342',
+                location_arg: '4',
+                meta: '',
+              },
+              {
+                id: '12',
+                type: 'standard',
+                type_arg: '2',
+                location: 'table2348342',
+                location_arg: '2',
+                meta: '',
+              },
+              {
+                id: '15',
+                type: 'standard',
+                type_arg: '11',
+                location: 'table2348342',
+                location_arg: '5',
+                meta: '',
+              },
+            ],
+            2348343: [
+              {
+                id: '3',
+                type: 'standard',
+                type_arg: '5',
+                location: 'table2348343',
+                location_arg: '0',
+                meta: '',
+              },
+              {
+                id: '6',
+                type: 'standard',
+                type_arg: '0',
+                location: 'table2348343',
+                location_arg: '3',
+                meta: '',
+              },
+              {
+                id: '7',
+                type: 'standard',
+                type_arg: '9',
+                location: 'table2348343',
+                location_arg: '1',
+                meta: '',
+              },
+              {
+                id: '11',
+                type: 'creep',
+                type_arg: '14',
+                location: 'table2348343',
+                location_arg: '4',
+                meta: '',
+              },
+              {
+                id: '13',
+                type: 'standard',
+                type_arg: '8',
+                location: 'table2348343',
+                location_arg: '2',
+                meta: '',
+              },
+              {
+                id: '14',
+                type: 'standard',
+                type_arg: '3',
+                location: 'table2348343',
+                location_arg: '5',
+                meta: '',
+              },
+            ],
+          },
+          center: {
+            left: {
+              location: 'left',
+              controller: '0',
+            },
+            center: {
+              location: 'center',
+              controller: '2348343',
+            },
+            right: {
+              location: 'right',
+              controller: '2348343',
+            },
+          },
+          day_or_night: 'day',
+        },
+      },
+    ],
+  },
 ];
 
 function loadTestEvent(idx = 0) {
   const vue = window.vue;
+  if (testEvent[idx].seqEvts) {
+    testEvent[idx].seqEvts.forEach((evt) => {
+      vue.bgaNotifications.push(evt);
+    });
+    return;
+  }
   vue.bgaNotifications.push(testEvent[idx]);
+}
+
+function setState(state) {
+  const vue = window.vue;
+  vue.bgaStates.push(state);
 }
 
 // append UI
@@ -1562,6 +2029,17 @@ onclick="loadTestData(Number(document.getElementById('test-data-idx').value))"
 onclick="loadTestEvent(Number(document.getElementById('test-event-idx').value))"
   >
   Load test event
+</button>
+<select id="test-state">
+<option value="roundSetup">roundSetup</option>
+<option value="mulligan:init">mulligan</option>
+<option value="playerTurn:init">playerTurn</option>
+<option value="reincarnationTurn:init">reincarnationTurn</option>
+<option value="endRound:init">endRound</option>
+</select>
+<button
+onclick="setState(document.getElementById('test-state').value)">
+  Load state
 </button>
 </div>
 `;
