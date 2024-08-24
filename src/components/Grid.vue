@@ -13,6 +13,7 @@ const props = defineProps<{
   data: GridData;
   type: string;
   active?: boolean;
+  round: number;
 }>();
 
 const emit = defineEmits(['selectGrid', 'selectCol']);
@@ -291,6 +292,8 @@ const getOverlayPos = (overlay: Overlay[]): OverlayWithPos[] => {
             selected0: isSelected(0, idx, idy),
             selectable1: isSelectable(1, idx, idy),
             selected1: isSelected(1, idx, idy),
+            day: props.round % 2 !== 0,
+            night: props.round % 2 === 0,
           }"
           v-bind:style="{
             width: size.width,
@@ -385,8 +388,14 @@ li {
   list-style-type: none;
 }
 li.grid-cell {
-  border: 3px solid rgba(0, 0, 0, 0.3);
   position: relative;
+  transition: border 1s linear;
+}
+.day li.grid-cell {
+  border: 3px solid rgba(0, 0, 0, 0.3);
+}
+.night li.grid-cell {
+  border: 3px solid rgba(255, 255, 255, 0.7);
 }
 li.aura {
   transition: 0.2s;

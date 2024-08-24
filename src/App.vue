@@ -197,7 +197,7 @@ const restore = () => {
   const getMeta = (meta: string | undefined, cardType: string): CardMeta[] => {
     if (!meta) {
       if (cardDefs.mainCard.details?.[Number(cardType)]?.stealth) {
-        return [{metaID: 'stealth'}];
+        return [{ metaID: 'stealth' }];
       }
       return [];
     }
@@ -219,7 +219,7 @@ const restore = () => {
     gridData.value.cardIDs[col][row] = {
       id: c.id,
       cid: `mainCard${c.type_arg}`,
-    meta: getMeta(c.meta, c.type_arg),
+      meta: getMeta(c.meta, c.type_arg),
     };
   });
   gamedata.value.oppo_table.forEach((c) => {
@@ -396,6 +396,7 @@ defineExpose({
   ctrlBarData,
   handData,
   gridData,
+  roundData,
   ready,
 });
 </script>
@@ -404,7 +405,14 @@ defineExpose({
   <link rel="preload" as="image" :href="urlBase + cardsetImgUrl" />
 
   <div>
-    <div id="common_table" class="whiteblock">
+    <div
+      id="common_table"
+      class="board"
+      :class="{
+        day: roundData.round % 2 !== 0,
+        night: roundData.round % 2 === 0,
+      }"
+    >
       <div class="card-header">
         <h3 id="ontable_header">
           <span>{{ i18n('On Table') }}:</span>
@@ -412,7 +420,13 @@ defineExpose({
         <div class="round-info">{{ i18n('Round') }}:{{ roundData.round }}</div>
       </div>
 
-      <Grid ref="grid" type="table" :data="gridData" :active="gridData.active">
+      <Grid
+        ref="grid"
+        type="table"
+        :data="gridData"
+        :active="gridData.active"
+        :round="roundData.round"
+      >
       </Grid>
     </div>
 
@@ -428,7 +442,7 @@ defineExpose({
       </CtrlBar>
     </div>
 
-    <div id="player_hand" class="whiteblock">
+    <div id="player_hand">
       <div class="card-header">
         <h3 id="inhand_header">
           <span>{{ i18n('Your Hand') }}:</span>
@@ -476,10 +490,24 @@ defineExpose({
   margin: 0;
 }
 
-.whiteblock {
+.whiteblock,
+.board,
+#player_hand {
   margin-bottom: 10px;
   margin-top: 10px;
   padding: 10px;
+  transition: background-color 1s linear, color 1s linear;
+}
+
+#player_hand,
+.board.day {
+  background-color: rgba(255, 255, 255, 0.7);
+  color: #222;
+}
+
+.board.night {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #eee;
 }
 
 .card-header {
@@ -495,7 +523,6 @@ defineExpose({
     flex: 1 1 auto;
     text-align: right;
     margin: 5px;
-    color: #555;
     font-weight: bold;
   }
 }

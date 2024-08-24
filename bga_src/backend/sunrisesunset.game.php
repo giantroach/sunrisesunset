@@ -749,11 +749,11 @@ class SunriseSunset extends Table
 
     // reveal notification
     $msg = clienttranslate(
-      '"Anubis" disabled stealth and ability of "${cardName}".'
+      '"Anubis" disabled stealth and ability of "${card_name}".'
     );
     if ($cardName === 'watcher') {
       $msg = clienttranslate(
-        '"Ra" disabled stealth of "${cardName}".'
+        '"Ra" disabled stealth of "${card_name}".'
       );
     }
     $cardDef = $this->card_types[intval($targetCardInfo['type_arg'])];
