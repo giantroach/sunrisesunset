@@ -1819,7 +1819,7 @@ const testEvent = [
     },
   },
   {
-    name: 'score + endRound',
+    name: 'score + endRound1',
     seqEvts: [
       {
         name: 'score',
@@ -1990,6 +1990,203 @@ const testEvent = [
             },
           },
           day_or_night: 'day',
+        },
+      },
+    ],
+  },
+  {
+    name: 'score + endRound2',
+    seqEvts: [
+      {
+        "name": "score",
+        "args": {
+          "i18n": [
+            "lane"
+          ],
+          "lane": "right"
+        }
+      },
+      {
+        "name": "score",
+        "args": {
+          "i18n": [
+            "lane"
+          ],
+          "lane": "left"
+        }
+      },
+      {
+        name: 'score',
+        args: {
+          i18n: ['lane'],
+          lane: 'left',
+          scoreA: 8,
+          scoreB: 3,
+          wPlayerName: 'giantroach1',
+          w_player_id: 2348343,
+        },
+      },
+      {
+        name: 'score',
+        args: {
+          i18n: ['lane'],
+          lane: 'center',
+          scoreA: 5,
+          scoreB: 11,
+          wPlayerName: null,
+          w_player_id: 'tie',
+        },
+      },
+      {
+        name: 'score',
+        args: {
+          i18n: ['lane'],
+          lane: 'right',
+          scoreA: 17,
+          scoreB: 9,
+          wPlayerName: 'giantroach0',
+          w_player_id: 2348342,
+        },
+      },
+      {
+        name: 'endRound',
+        args: {
+          score: {
+            2348342: {
+              0: 7,
+              1: 1,
+              2: 5,
+              3: 1,
+              4: 4,
+              5: 12,
+            },
+            2348343: {
+              0: 0,
+              1: 7,
+              2: 8,
+              3: 3,
+              4: 4,
+              5: 1,
+            },
+            center: [0, 4, 6],
+          },
+          table: {
+            2348342: [
+              {
+                id: '1',
+                type: 'standard',
+                type_arg: '2',
+                location: 'table2348342',
+                location_arg: '5',
+                meta: '',
+              },
+              {
+                id: '5',
+                type: 'standard',
+                type_arg: '10',
+                location: 'table2348342',
+                location_arg: '0',
+                meta: '',
+              },
+              {
+                id: '7',
+                type: 'creep',
+                type_arg: '14',
+                location: 'table2348342',
+                location_arg: '1',
+                meta: 'watcher,',
+              },
+              {
+                id: '8',
+                type: 'standard',
+                type_arg: '12',
+                location: 'table2348342',
+                location_arg: '2',
+                meta: 'oracle,',
+              },
+              {
+                id: '12',
+                type: 'standard',
+                type_arg: '1',
+                location: 'table2348342',
+                location_arg: '3',
+                meta: '',
+              },
+              {
+                id: '15',
+                type: 'standard',
+                type_arg: '8',
+                location: 'table2348342',
+                location_arg: '4',
+                meta: '',
+              },
+            ],
+            2348343: [
+              {
+                id: '4',
+                type: 'standard',
+                type_arg: '5',
+                location: 'table2348343',
+                location_arg: '1',
+                meta: '',
+              },
+              {
+                id: '6',
+                type: 'standard',
+                type_arg: '3',
+                location: 'table2348343',
+                location_arg: '0',
+                meta: '',
+              },
+              {
+                id: '10',
+                type: 'standard',
+                type_arg: '9',
+                location: 'table2348343',
+                location_arg: '3',
+                meta: '',
+              },
+              {
+                id: '11',
+                type: 'creep',
+                type_arg: '13',
+                location: 'table2348343',
+                location_arg: '5',
+                meta: '',
+              },
+              {
+                id: '13',
+                type: 'standard',
+                type_arg: '7',
+                location: 'table2348343',
+                location_arg: '4',
+                meta: '',
+              },
+              {
+                id: '14',
+                type: 'standard',
+                type_arg: '0',
+                location: 'table2348343',
+                location_arg: '2',
+                meta: '',
+              },
+            ],
+          },
+          center: {
+            left: {
+              location: 'left',
+              controller: '2348343',
+            },
+            center: {
+              location: 'center',
+              controller: '2348342',
+            },
+            right: {
+              location: 'right',
+              controller: '2348342',
+            },
+          },
+          day_or_night: 'night',
         },
       },
     ],

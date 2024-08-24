@@ -331,6 +331,10 @@ const initBgaNotification = (): void => {
       bgaNotifQueue = bgaNotifQueue.then(() => {
         return new Promise<void>((resolve) => {
           switch (notif.name) {
+            case 'score':
+              sub?.handle(notif);
+              resolve();
+              break;
             default:
               sub?.handle(notif);
               setTimeout(() => {
