@@ -92,7 +92,6 @@ class State {
   public throttledRefresh: any;
 
   public refresh() {
-    console.log(`this.current`, this.current);
     switch (this.current) {
       case 'waitingForOtherPlayer':
         this.assign(this.handData, 'active', false);

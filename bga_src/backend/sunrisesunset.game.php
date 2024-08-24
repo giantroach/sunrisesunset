@@ -147,6 +147,11 @@ class SunriseSunset extends Table
       "INSERT INTO center (center_id, center_location, center_controller) VALUES (3, 'right', 0)"
     );
 
+    // just for translation purpose
+    clienttranslate('center');
+    clienttranslate('right');
+    clienttranslate('left');
+
     $this->gamestate->nextState('roundSetup');
 
     /************ End of the game initialization *****/
@@ -385,9 +390,10 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] center number is set to 0 by "La Plaga".'
+          '[${lane} lane] location number is set to 0 by "La Plaga".'
         ),
         [
+          'i18n' => ['lane'],
           'lane' => $lane,
         ]
       );
@@ -398,9 +404,10 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] center number is increased by 1 by "Maat".'
+          '[${lane} lane] location number is increased by 1 by "Maat".'
         ),
         [
+          'i18n' => ['lane'],
           'lane' => $lane,
         ]
       );
@@ -411,9 +418,10 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] center number is decreased by 2 by "El Libro de los Muertos".'
+          '[${lane} lane] location number is decreased by 2 by "El Libro de los Muertos".'
         ),
         [
+          'i18n' => ['lane'],
           'lane' => $lane,
         ]
       );
@@ -441,9 +449,10 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] "Apis" became power 15 since center is ${center}.'
+          '[${lane} lane] "Apis" became power 15 since location is ${center}.'
         ),
         [
+          'i18n' => ['lane'],
           'lane' => $lane,
           'center' => $center,
         ]
@@ -749,10 +758,11 @@ class SunriseSunset extends Table
     }
     $cardDef = $this->card_types[intval($targetCardInfo['type_arg'])];
     self::notifyAllPlayers('updateCard', $msg, [
+      'i18n' => ['card_name'],
       'player_id' => $targetPlayerID,
       'player_name' => $this->getPlayerName($targetPlayerID),
       'card' => $targetCardInfo,
-      'cardName' => $cardDef->name,
+      'card_name' => $cardDef->name,
       'gridID' => intval($targetGridID),
     ]);
   }
@@ -954,6 +964,7 @@ class SunriseSunset extends Table
     $msg = clienttranslate('"Isis" removed "${card_name}".');
     // this cannot be AllPlayers
     self::notifyPlayer($targetPlayerID, 'reincarnateCard', $msg, [
+      'i18n' => ['card_name'],
       'player_id' => $targetPlayerID,
       'player_name' => $this->getPlayerName($targetPlayerID),
       'gridID' => $targetGridID,
@@ -962,6 +973,7 @@ class SunriseSunset extends Table
       'card' => $newCard,
     ]);
     self::notifyPlayer($nonTargetPlayerID, 'reincarnateCard', $msg, [
+      'i18n' => ['card_name'],
       'player_id' => $targetPlayerID,
       'player_name' => $this->getPlayerName($targetPlayerID),
       'gridID' => $targetGridID,
@@ -1005,6 +1017,7 @@ class SunriseSunset extends Table
     }
 
     self::notifyPlayer($p1, 'score', $msg, [
+      'i18n' => ['lane'],
       'lane' => $lane,
       'scoreA' => $scores[$p2],
       'scoreB' => $scores[$p1],
@@ -1013,6 +1026,7 @@ class SunriseSunset extends Table
     ]);
 
     self::notifyPlayer($p2, 'score', $msg, [
+      'i18n' => ['lane'],
       'lane' => $lane,
       'scoreA' => $scores[$p1],
       'scoreB' => $scores[$p2],
@@ -1072,7 +1086,7 @@ class SunriseSunset extends Table
         self::notifyPlayer(
           $playerID,
           'logError',
-          clienttranslate('"Anubis/Seth" cannot be discarded.'),
+          clienttranslate('"Horus/Seth" cannot be discarded.'),
           []
         );
       }
@@ -1104,6 +1118,7 @@ class SunriseSunset extends Table
           'mulligan',
           clienttranslate('${player_name} discarded "${card_name}" face down.'),
           [
+            'i18n' => ['card_name'],
             'player_name' => self::getActivePlayerName(),
             'card_name' => $cardDef->name,
             'card' => $newCard,
@@ -1124,6 +1139,7 @@ class SunriseSunset extends Table
           'mulligan',
           clienttranslate('${player_name} discarded "${card_name}".'),
           [
+            'i18n' => ['card_name'],
             'player_name' => self::getActivePlayerName(),
             'card_name' => $cardDef->name,
             'card' => $newCard,
@@ -1135,6 +1151,7 @@ class SunriseSunset extends Table
           'mulligan',
           clienttranslate('${player_name} discarded "${card_name}".'),
           [
+            'i18n' => ['card_name'],
             'player_name' => self::getActivePlayerName(),
             'card_name' => $cardDef->name,
           ]
