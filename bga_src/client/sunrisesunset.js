@@ -122,6 +122,9 @@ define([
           case 'endRound':
             vue.bgaStates.push('endRound:init');
             break;
+          case 'gameEnd':
+            vue.bgaStates.push('gameEnd:init');
+            break;
           case 'dummmy':
             break;
         }
@@ -261,7 +264,7 @@ define([
       // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
       //
 
-      dojo.subscribe("updateScore", this, (data) => {
+      dojo.subscribe('updateScore', this, (data) => {
         this.scoreCtrl[data.args.playerID].incValue(1);
       });
 

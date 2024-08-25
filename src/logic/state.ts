@@ -44,7 +44,9 @@ type CurrentState =
   | 'endRound:submit'
   | 'endRound:afterAnim'
   | 'endRound:afterSubmit'
-  | 'otherPlayerTurn';
+  | 'otherPlayerTurn'
+  | 'gameEnd:init'
+  | 'gameEnd:afterAnim';
 
 type SubState =
   | 'init'
@@ -437,6 +439,22 @@ class State {
       case 'endRound:afterSubmit': {
         this.assign(this.handData, 'selected', []);
         this.assign(this.ctrlBarData, 'type', 'waitingOppo');
+        break;
+      }
+
+      case 'gameEnd:init': {
+        if (
+          !this.scoreData.value.myScore.length ||
+            !this.scoreData.value.oppoScore.length
+        ) {
+          return;
+        }
+        this.setScore();
+        this.setSubState('afterAnim');
+        break;
+      }
+
+      case 'gameEnd:afterAnim': {
         break;
       }
     }

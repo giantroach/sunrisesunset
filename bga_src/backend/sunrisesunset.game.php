@@ -210,7 +210,8 @@ class SunriseSunset extends Table
       if (
         $c->stealth &&
         !$card['meta'] &&
-        $this->getStateName() !== 'endRound'
+        $this->getStateName() !== 'endRound' &&
+        $this->getStateName() !== 'gameEnd'
       ) {
         $result['oppo_table'][] = [
           'id' => '0',
