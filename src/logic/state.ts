@@ -142,6 +142,9 @@ class State {
         break;
 
       case 'reincarnationTurn:init': {
+        if (!this.reincarnationData.value.reincarnatedCardID) {
+          break;
+        }
         this.assign(this.handData, 'active', true);
         this.assign(this.handData, 'selected', []);
         const selectable = new Array(
