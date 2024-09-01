@@ -3,6 +3,7 @@ import { StoneType } from './stone.d';
 
 type BgaNotifyName =
   | 'newRound'
+  | 'newHand'
   | 'playCard'
   | 'moveCard'
   | 'updateCard'
@@ -20,6 +21,7 @@ interface BgaNotification {
   name: BgaNotifyName;
   args:
     | BgaNewRoundNotif
+    | BgaNewHandNotif
     | BgaPlayCardNotif
     | BgaMoveCardNotif
     | BgaUpdateCardNotif
@@ -29,7 +31,6 @@ interface BgaNotification {
 }
 
 interface BgaNewRoundNotif {
-  player_cards: Card[];
   // players: {
   //   { [playerId: number]: Player };
   // };
@@ -40,6 +41,10 @@ interface BgaNewRoundNotif {
   };
   day_or_night: 'day' | 'night';
   round: string;
+}
+
+interface BgaNewHandNotif {
+  player_cards: Card[];
 }
 
 interface BgaPlayCardNotif {
@@ -97,9 +102,9 @@ interface BgaEndRoundNotif {
   };
   day_or_night: 'day' | 'night';
   player_sides: {
-    day: string,
-    night: string
-  }
+    day: string;
+    night: string;
+  };
 }
 
 export {
@@ -107,6 +112,7 @@ export {
   BgaConfirm,
   BgaNotification,
   BgaNewRoundNotif,
+  BgaNewHandNotif,
   BgaPlayCardNotif,
   BgaMoveCardNotif,
   BgaUpdateCardNotif,

@@ -188,7 +188,6 @@ class SunriseSunset extends Table
       $result['players'][$key]['cards'] = $count;
     }
 
-    // FIXME: this does not work with observer
     // Current player === currently logged in player
     if (!$isObserver) {
       $result['player_cards'] = array_values(
@@ -228,7 +227,7 @@ class SunriseSunset extends Table
         }
       }
     } else {
-      // FIXME: Observer: all the stealth must not be visible
+      // Observer: all the stealth must not be visible
       $result['player_cards'] = [];
       $result['player_table'] = [];
       $result['oppo_table'] = [];
@@ -1356,8 +1355,6 @@ class SunriseSunset extends Table
     $c = $this->card_types[intval($cardInfo['type_arg'])];
     if ($c->stealth) {
       self::notifyAllPlayers(
-        // FIXME: in this way, observer cannot see.
-        // FIXME: add an extra arg to distinguish & make it notifyAllPlayers
         'playCard',
         clienttranslate('${player_name} played a stealth card.'),
         [
@@ -1510,6 +1507,14 @@ class SunriseSunset extends Table
       'SELECT center_location location, center_controller controller FROM center';
     $center = self::getCollectionFromDb($sql);
 
+    self::notifyAllPlayers('newRound', clienttranslate('New round started'), [
+      'players' => $players,
+      'day_or_night' => $round_side,
+      'center' => $center,
+      'round' => $round_num,
+    ]);
+
+    // FIXME: this does not work with observer
     foreach ($players as $key => $value) {
       $player_id = $key;
       $player_cards = array_values(
@@ -1518,14 +1523,10 @@ class SunriseSunset extends Table
 
       self::notifyPlayer(
         $player_id,
-        'newRound',
-        clienttranslate('New round started'),
+        'newHand',
+        clienttranslate('Received new hand'),
         [
           'player_cards' => $player_cards,
-          'players' => $players,
-          'day_or_night' => $round_side,
-          'center' => $center,
-          'round' => $round_num,
         ]
       );
     }
@@ -1933,8 +1934,8 @@ class SunriseSunset extends Table
     // player sides for observer
     $result['player_sides'] = [];
     foreach ($allData['players'] as $playerID => $player) {
-        $side = $this->getPlayerSide($playerID);
-        $result['player_sides'][$side] = $playerID;
+      $side = $this->getPlayerSide($playerID);
+      $result['player_sides'][$side] = $playerID;
     }
 
     self::notifyAllPlayers(

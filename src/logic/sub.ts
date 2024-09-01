@@ -2,6 +2,7 @@ import type { Ref } from 'vue';
 import {
   BgaNotification,
   BgaNewRoundNotif,
+  BgaNewHandNotif,
   BgaPlayCardNotif,
   BgaMoveCardNotif,
   BgaUpdateCardNotif,
@@ -38,7 +39,6 @@ export class Sub {
     switch (notif.name) {
       case 'newRound': {
         const arg = notif.args as BgaNewRoundNotif;
-        const cards = arg.player_cards;
         const center = arg.center;
         const dayOrNight = arg.day_or_night;
         const roundNum = Number(arg.round);
@@ -74,6 +74,16 @@ export class Sub {
           meta: [],
         };
 
+        // update round
+        this.roundData.value.round = roundNum;
+        this.roundData.value.side = dayOrNight === 'day' ? 'Day' : 'Night';
+        break;
+      }
+
+      case 'newHand': {
+        const arg = notif.args as BgaNewHandNotif;
+        const cards = arg.player_cards;
+
         // update hand
         cards.forEach((c) => {
           this.handData.value.cardIDs?.push({
@@ -88,10 +98,6 @@ export class Sub {
                 }),
           });
         });
-
-        // update round
-        this.roundData.value.round = roundNum;
-        this.roundData.value.side = dayOrNight === 'day' ? 'Day' : 'Night';
         break;
       }
 

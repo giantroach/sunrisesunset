@@ -270,6 +270,7 @@ define([
 
       const notifications = [
         'newRound',
+        'newHand',
         'mulligan',
         'playCard',
         'moveCard',

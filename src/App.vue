@@ -430,6 +430,8 @@ defineExpose({
   handData,
   gridData,
   roundData,
+  scoreData,
+  reincarnationData,
   ready,
 });
 </script>
