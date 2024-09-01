@@ -37,7 +37,7 @@ var jstpl_some_game_item='<div class="my_game_item" id="my_game_item_${MY_ITEM_I
 */
 
 let jstpl_player_board = `
-<div class="vughex-hand-size">
+<div class="ss-hand-size">
   <div>
     <span id="hand-count_p\${id}">0</span>
     <span id="hand-icon_p\${id}" class="fa fa-hand-paper-o"></span>

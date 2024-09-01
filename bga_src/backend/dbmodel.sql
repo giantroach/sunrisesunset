@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `reincarnation` (
 CREATE TABLE IF NOT EXISTS `score` (
   `score_round` INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `score_center_list` VARCHAR(18),
-  `score_sun_list` VARCHAR(18),
+  `score_day_list` VARCHAR(18),
   `score_night_list` VARCHAR(18),
   `score_winner` VARCHAR(30)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

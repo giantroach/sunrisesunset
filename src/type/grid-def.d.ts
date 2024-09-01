@@ -1,4 +1,4 @@
-type GridType = "square";
+type GridType = 'square';
 interface SizeDef {
   width: string;
   height: string;

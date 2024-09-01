@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "vite",
     "dev": "vite",
     "build": "npm run build:dev && npm run build:bgaBackend && npm run build:bgaClient",
     "build:bgaBackend": "cp -f ./bga_src/backend/* ./dist/",
@@ -11,13 +12,17 @@
     "build:bgaCpImg": "mkdir -p ./dist/img/ && rm -rf ./dist/img/* && cp -f ./bga_src/img/* ./dist/img/",
     "build:dev": "vue-tsc && vite build && rm ./dist/index.html",
     "clear:dist": "rm -rf ./dist/*",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier -w src/*.{ts,vue} && prettier -w src/**/*.{ts,vue}"
   },
   "dependencies": {
     "vue": "^3.4.27"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "@prettier/plugin-php": "0.19.7",
+    "prettier": "2.8.1",
+    "prettier-plugin-vue": "^1.1.6",
     "sass": "^1.77.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",

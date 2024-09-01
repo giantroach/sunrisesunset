@@ -38,7 +38,7 @@ class SunriseSunset extends Table
       //    "my_first_game_variant" => 100,
       //    "my_second_game_variant" => 101,
       //      ...
-      "max_score" => 100,
+      'max_score' => 100,
     ]);
 
     // create instance specifying card module
@@ -169,6 +169,8 @@ class SunriseSunset extends Table
   protected function getAllDatas()
   {
     $result = [];
+    $isObserver = $this->isObserver();
+    $result['is_observer'] = $isObserver;
 
     // !! We must only return informations visible by this player !!
     $current_player_id = self::getCurrentPlayerId();
@@ -186,43 +188,92 @@ class SunriseSunset extends Table
       $result['players'][$key]['cards'] = $count;
     }
 
-    $result['player_cards'] = array_values(
-      $this->cards->getCardsInLocation('hand', $current_player_id)
-    );
-
-    // Hide enemy stealth units
-    $result['player_table'] = $this->getCardsInLocation(
-      'table' . $current_player_id
-    );
-
     // FIXME: this does not work with observer
     // Current player === currently logged in player
-    $sql =
-      "SELECT player_id id FROM player WHERE player_id<>'" .
-      $current_player_id .
-      "'";
-    $oppo_id = self::getUniqueValueFromDB($sql);
-    $result['oppo_table'] = [];
+    if (!$isObserver) {
+      $result['player_cards'] = array_values(
+        $this->cards->getCardsInLocation('hand', $current_player_id)
+      );
 
-    foreach ($this->getCardsInLocation('table' . $oppo_id) as $card) {
-      $c = $this->card_types[intval($card['type_arg'])];
-      // return raw card at the end of round
-      if (
-        $c->stealth &&
-        !$card['meta'] &&
-        $this->getStateName() !== 'endRound' &&
-        $this->getStateName() !== 'gameEnd'
-      ) {
-        $result['oppo_table'][] = [
-          'id' => '0',
-          'type' => 'stealth',
-          'type_arg' => '17',
-          'location' => $card['location'],
-          'location_arg' => $card['location_arg'],
-        ];
-      } else {
-        $result['oppo_table'][] = $card;
+      // Hide enemy stealth units
+      $result['player_table'] = $this->getCardsInLocation(
+        'table' . $current_player_id
+      );
+
+      $sql =
+        "SELECT player_id id FROM player WHERE player_id<>'" .
+        $current_player_id .
+        "'";
+      $oppo_id = self::getUniqueValueFromDB($sql);
+      $result['oppo_table'] = [];
+
+      foreach ($this->getCardsInLocation('table' . $oppo_id) as $card) {
+        $c = $this->card_types[intval($card['type_arg'])];
+        // return raw card at the end of round
+        if (
+          $c->stealth &&
+          !$card['meta'] &&
+          $this->getStateName() !== 'endRound' &&
+          $this->getStateName() !== 'gameEnd'
+        ) {
+          $result['oppo_table'][] = [
+            'id' => '0',
+            'type' => 'stealth',
+            'type_arg' => '17',
+            'location' => $card['location'],
+            'location_arg' => $card['location_arg'],
+          ];
+        } else {
+          $result['oppo_table'][] = $card;
+        }
       }
+    } else {
+      // FIXME: Observer: all the stealth must not be visible
+      $result['player_cards'] = [];
+      $result['player_table'] = [];
+      $result['oppo_table'] = [];
+
+      $sql = 'SELECT player_id FROM player ORDER BY player_no ASC';
+      $ps = self::getObjectListFromDB($sql);
+      $p1 = $ps[0]['player_id'];
+      $p2 = $ps[1]['player_id'];
+      $this->dump('$p1', $p1);
+      $this->dump('$p2', $p2);
+      $tables = [];
+      $tables[$p1] = [];
+      $tables[$p2] = [];
+
+      foreach ([$p1, $p2] as $pid) {
+        foreach ($this->getCardsInLocation('table' . $pid) as $card) {
+          $this->dump('$pid', $pid);
+          $c = $this->card_types[intval($card['type_arg'])];
+          // return raw card at the end of round
+          if (
+            $c->stealth &&
+            !$card['meta'] &&
+            $this->getStateName() !== 'endRound' &&
+            $this->getStateName() !== 'gameEnd'
+          ) {
+            $tables[$pid][] = [
+              'id' => '0',
+              'type' => 'stealth',
+              'type_arg' => '17',
+              'location' => $card['location'],
+              'location_arg' => $card['location_arg'],
+            ];
+          } else {
+            $tables[$pid][] = $card;
+          }
+        }
+      }
+
+      $this->dump('$tables', $tables);
+      $this->dump('$p1', $p1);
+      $this->dump('$p2', $p2);
+      $this->dump('$tables[$p1]', $tables[$p1]);
+      $this->dump('$tables[$p2]', $tables[$p2]);
+      $result['player_table'] = $tables[$p1];
+      $result['oppo_table'] = $tables[$p2];
     }
 
     $sql = 'SELECT round_side, round_num FROM round';
@@ -252,17 +303,17 @@ class SunriseSunset extends Table
       'SELECT ' .
       'score_round round, ' .
       'score_center_list center_list, ' .
-      'score_sun_list sun_list, ' .
+      'score_day_list day_list, ' .
       'score_night_list night_list, ' .
       'score_winner winner' .
       ' FROM score ORDER BY score_round DESC LIMIT 1';
     $scores = self::getObjectFromDB($sql);
     if ($scores) {
       $result['score'] = [];
-      $sunPlayerID = $this->getSunPlayerID();
+      $dayPlayerID = $this->getDayPlayerID();
       $nightPlayerID = $this->getNightPlayerID();
       $result['score']['center'] = explode(',', $scores['center_list']);
-      $result['score'][$sunPlayerID] = explode(',', $scores['sun_list']);
+      $result['score'][$dayPlayerID] = explode(',', $scores['day_list']);
       $result['score'][$nightPlayerID] = explode(',', $scores['night_list']);
       $result['winner'] = explode(',', $scores['winner']);
     }
@@ -270,6 +321,13 @@ class SunriseSunset extends Table
     // identifier
     $result['player_side'] = $this->getPlayerSide($current_player_id);
     $result['player_id'] = intval($current_player_id);
+
+    // player sides for observer
+    $result['player_sides'] = [];
+    foreach ($result['players'] as $playerID => $player) {
+      $side = $this->getPlayerSide($playerID);
+      $result['player_sides'][$side] = $playerID;
+    }
 
     return $result;
   }
@@ -319,7 +377,7 @@ class SunriseSunset extends Table
     return $state['name'];
   }
 
-  function getSunPlayerID()
+  function getDayPlayerID()
   {
     $players = self::getCollectionFromDb(
       'SELECT player_id id, player_no FROM player'
@@ -349,13 +407,14 @@ class SunriseSunset extends Table
     $playerNo = self::getUniqueValueFromDB($sql);
 
     if ($playerNo == 1) {
-      return 'sun';
+      return 'day';
     }
     if ($playerNo == 2) {
       return 'night';
     }
 
-    die('ok');
+    // but actually an observer
+    return 'day';
   }
 
   function getOppoID($playerID)
@@ -753,9 +812,7 @@ class SunriseSunset extends Table
       '"Anubis" disabled stealth and ability of "${card_name}".'
     );
     if ($cardName === 'watcher') {
-      $msg = clienttranslate(
-        '"Ra" disabled stealth of "${card_name}".'
-      );
+      $msg = clienttranslate('"Ra" disabled stealth of "${card_name}".');
     }
     $cardDef = $this->card_types[intval($targetCardInfo['type_arg'])];
     self::notifyAllPlayers('updateCard', $msg, [
@@ -765,6 +822,7 @@ class SunriseSunset extends Table
       'card' => $targetCardInfo,
       'card_name' => $cardDef->name,
       'gridID' => intval($targetGridID),
+      'playerSide' => $this->getPlayerSide($targetPlayerID),
     ]);
   }
 
@@ -1036,6 +1094,17 @@ class SunriseSunset extends Table
     ]);
   }
 
+  function isObserver()
+  {
+    $playerID = $this->getCurrentPlayerId();
+    $sql = "SELECT count(*) FROM player where player_id='" . $playerID . "'";
+    $cnt = intval(self::getUniqueValueFromDB($sql));
+    if ($cnt === 0) {
+      return true;
+    }
+    return false;
+  }
+
   //////////////////////////////////////////////////////////////////////////////
   //////////// Player actions
   ////////////
@@ -1113,7 +1182,7 @@ class SunriseSunset extends Table
       $this->cards->moveCard($cardID, 'discard', 0);
 
       if ($round_num === 1 && $playerID === $dayPlayerID) {
-        // for the first round of sun player, do not reveal the card
+        // for the first round of day player, do not reveal the card
         self::notifyPlayer(
           $playerID,
           'mulligan',
@@ -1280,13 +1349,15 @@ class SunriseSunset extends Table
         'card' => $cardInfo,
         'cards' => $numberOfcards,
         'gridID' => $gridID,
+        'ignoreActivePlayer' => false,
       ]
     );
 
     $c = $this->card_types[intval($cardInfo['type_arg'])];
     if ($c->stealth) {
-      self::notifyPlayer(
-        $oppoID,
+      self::notifyAllPlayers(
+        // FIXME: in this way, observer cannot see.
+        // FIXME: add an extra arg to distinguish & make it notifyAllPlayers
         'playCard',
         clienttranslate('${player_name} played a stealth card.'),
         [
@@ -1301,11 +1372,12 @@ class SunriseSunset extends Table
           ],
           'cards' => $numberOfcards,
           'gridID' => $gridID,
+          'ignoreActivePlayer' => true,
+          'playerSide' => $this->getPlayerSide($actorID),
         ]
       );
     } else {
-      self::notifyPlayer(
-        $oppoID,
+      self::notifyAllPlayers(
         'playCard',
         clienttranslate('${player_name} played a card.'),
         [
@@ -1314,6 +1386,8 @@ class SunriseSunset extends Table
           'card' => $cardInfo,
           'cards' => $numberOfcards,
           'gridID' => $gridID,
+          'ignoreActivePlayer' => true,
+          'playerSide' => $this->getPlayerSide($actorID),
         ]
       );
     }
@@ -1401,19 +1475,19 @@ class SunriseSunset extends Table
     // deal appropriate creep
     $allCards = array_values($this->cards->getCardsInLocation('deck'));
 
-    $creepSun = null;
+    $creepDay = null;
     $creepNgt = null;
     foreach ($allCards as $val) {
       if ($val['type_arg'] == 13) {
         $creepNgt = $val;
       }
       if ($val['type_arg'] == 14) {
-        $creepSun = $val;
+        $creepDay = $val;
       }
     }
     foreach ($players as $playerID => $player) {
       if ($player['player_no'] == 1) {
-        $this->cards->moveCard($creepSun['id'], 'hand', $playerID);
+        $this->cards->moveCard($creepDay['id'], 'hand', $playerID);
       }
       if ($player['player_no'] == 2) {
         $this->cards->moveCard($creepNgt['id'], 'hand', $playerID);
@@ -1461,7 +1535,7 @@ class SunriseSunset extends Table
       $this->activeNextPlayer();
     } else {
       # activate day / night based player
-      // 13 (night) / 14 (sun)
+      // 13 (night) / 14 (day)
       $creep = 14;
       if ($round_side === 'night') {
         $creep = 13;
@@ -1856,6 +1930,13 @@ class SunriseSunset extends Table
     $sql = 'SELECT round_side FROM round';
     $result['day_or_night'] = self::getUniqueValueFromDB($sql);
 
+    // player sides for observer
+    $result['player_sides'] = [];
+    foreach ($allData['players'] as $playerID => $player) {
+        $side = $this->getPlayerSide($playerID);
+        $result['player_sides'][$side] = $playerID;
+    }
+
     self::notifyAllPlayers(
       'endRound',
       clienttranslate('Round Ended.'),
@@ -1865,8 +1946,8 @@ class SunriseSunset extends Table
     // update score table
     ksort($result['score']['center'], SORT_NUMERIC);
     $centerScore = implode(',', $result['score']['center']);
-    ksort($result['score'][$this->getSunPlayerID()], SORT_NUMERIC);
-    $sunScore = implode(',', $result['score'][$this->getSunPlayerID()]);
+    ksort($result['score'][$this->getDayPlayerID()], SORT_NUMERIC);
+    $dayScore = implode(',', $result['score'][$this->getDayPlayerID()]);
     ksort($result['score'][$this->getNightPlayerID()], SORT_NUMERIC);
     $nightScore = implode(',', $result['score'][$this->getNightPlayerID()]);
     ksort($winLose, SORT_NUMERIC);
@@ -1875,13 +1956,13 @@ class SunriseSunset extends Table
     $sql =
       'INSERT INTO score (' .
       'score_center_list, ' .
-      'score_sun_list, ' .
+      'score_day_list, ' .
       'score_night_list, ' .
       'score_winner' .
       ") VALUES ('" .
       $centerScore .
       "','" .
-      $sunScore .
+      $dayScore .
       "','" .
       $nightScore .
       "','" .

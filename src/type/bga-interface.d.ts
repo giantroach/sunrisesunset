@@ -48,6 +48,8 @@ interface BgaPlayCardNotif {
   card: Card;
   cards: string; // number of cards
   gridID: string;
+  ignoreActivePlayer?: boolean;
+  playerSide: 'day' | 'night';
 }
 
 interface BgaMoveCardNotif {
@@ -62,6 +64,7 @@ interface BgaUpdateCardNotif {
   player_name: string;
   card: Card;
   gridID: string;
+  playerSide: 'day' | 'night';
 }
 
 interface BgaMulliganNotif {
@@ -93,6 +96,10 @@ interface BgaEndRoundNotif {
     right: Center;
   };
   day_or_night: 'day' | 'night';
+  player_sides: {
+    day: string,
+    night: string
+  }
 }
 
 export {

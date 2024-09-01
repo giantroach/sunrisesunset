@@ -74,4 +74,12 @@ interface CardMetaDef {
   type: 'warn' | 'info';
 }
 
-export { SizeDef, TextPlaceholder, TextLayoutDef, CardDetail, CardDef, MiniDef, CardMetaDef };
+export {
+  SizeDef,
+  TextPlaceholder,
+  TextLayoutDef,
+  CardDetail,
+  CardDef,
+  MiniDef,
+  CardMetaDef,
+};

@@ -103,6 +103,11 @@ const gamedata: Ref<Gamedata> = ref({
     },
   },
   reincarnated_card_id: null,
+  is_observer: false,
+  player_sides: {
+    day: '',
+    night: '',
+  },
 });
 
 let playerID = ref(-1);
@@ -157,10 +162,16 @@ const state: State = new State(
   handData,
   scoreData,
   reincarnationData,
-  ctrlBarData
+  ctrlBarData,
+  true
 );
 
 const restore = () => {
+  const isObserver = gamedata.value.is_observer;
+  const playerSides = gamedata.value.player_sides;
+
+  state.observer = isObserver;
+
   // restore all the data based on gamedata
   handData.value.cardIDs = [];
   handData.value.selectable = [];
@@ -196,7 +207,10 @@ const restore = () => {
 
   const getMeta = (meta: string | undefined, cardType: string): CardMeta[] => {
     if (!meta) {
-      if (cardDefs.mainCard.details?.[Number(cardType)]?.stealth) {
+      if (
+        !isObserver &&
+        cardDefs.mainCard.details?.[Number(cardType)]?.stealth
+      ) {
         return [{ metaID: 'stealth' }];
       }
       return [];
@@ -242,13 +256,27 @@ const restore = () => {
     };
   });
 
+  const isMySide = (pID: string) => {
+    const myPID = String(playerID.value);
+    if (!isObserver && pID === myPID) {
+      return true;
+    }
+
+    // observer is treated as sun player
+    if (isObserver && String(playerSides['day']) === pID) {
+      return true;
+    }
+
+    return false;
+  };
+
   // restore score
   if (gamedata.value.score) {
     const score = gamedata.value.score;
     for (const pID in score) {
       if (pID === 'center') {
         scoreData.value.centerScore = objToArray(score[pID]);
-      } else if (pID === String(playerID.value)) {
+      } else if (isMySide(String(pID))) {
         scoreData.value.myScore = objToArray(score[pID]);
       } else {
         scoreData.value.oppoScore = objToArray(score[pID]);
@@ -262,7 +290,7 @@ const restore = () => {
       }
       if (Number(winner) === 0) {
         scoreData.value.result[idx] = 'tie';
-      } else if (Number(winner) === Number(playerID.value)) {
+      } else if (isMySide(String(winner))) {
         scoreData.value.result[idx] = 'win';
       } else {
         scoreData.value.result[idx] = 'lose';
@@ -290,7 +318,8 @@ const restore = () => {
     handData,
     scoreData,
     reincarnationData,
-    roundData
+    roundData,
+    gamedata.value.is_observer
   );
 
   // update center controller
@@ -500,7 +529,9 @@ defineExpose({
   margin-bottom: 10px;
   margin-top: 10px;
   padding: 10px;
-  transition: background-color 1s linear, color 1s linear;
+  transition:
+    background-color 1s linear,
+    color 1s linear;
 }
 
 #player_hand,

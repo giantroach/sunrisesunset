@@ -75,7 +75,8 @@ class State {
     private handData: Ref<HandData>,
     private scoreData: Ref<ScoreData>,
     private reincarnationData: Ref<ReincarnationData>,
-    private ctrlBarData: Ref<CtrlBarData>
+    private ctrlBarData: Ref<CtrlBarData>,
+    public observer: boolean
   ) {
     this.throttledRefresh = throttle(this.refresh, 100, this);
     watch(
@@ -88,7 +89,7 @@ class State {
     );
   }
 
-  public current: CurrentState = 'waitingForOtherPlayer';
+  public current: CurrentState = 'init';
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public throttledRefresh: any;
@@ -101,7 +102,9 @@ class State {
         this.assign(this.gridData, 'active', false);
         this.assign(this.gridData, 'selected', []);
         this.assign(this.gridData, 'ghosts', []);
-        this.assign(this.ctrlBarData, 'type', 'waitingOppo');
+        if (!this.observer) {
+          this.assign(this.ctrlBarData, 'type', 'waitingOppo');
+        }
         break;
 
       case 'mulligan:init': {
@@ -426,7 +429,9 @@ class State {
       }
 
       case 'endRound:afterAnim': {
-        this.assign(this.ctrlBarData, 'type', 'submitScoreConfirm');
+        if (!this.observer) {
+          this.assign(this.ctrlBarData, 'type', 'submitScoreConfirm');
+        }
         break;
       }
 
@@ -445,7 +450,7 @@ class State {
       case 'gameEnd:init': {
         if (
           !this.scoreData.value.myScore.length ||
-            !this.scoreData.value.oppoScore.length
+          !this.scoreData.value.oppoScore.length
         ) {
           return;
         }

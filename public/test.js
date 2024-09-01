@@ -1990,6 +1990,10 @@ const testEvent = [
             },
           },
           day_or_night: 'day',
+          player_sides: {
+            day: 2348342,
+            night: 2348343,
+          },
         },
       },
     ],
@@ -1998,22 +2002,18 @@ const testEvent = [
     name: 'score + endRound2',
     seqEvts: [
       {
-        "name": "score",
-        "args": {
-          "i18n": [
-            "lane"
-          ],
-          "lane": "right"
-        }
+        name: 'score',
+        args: {
+          i18n: ['lane'],
+          lane: 'right',
+        },
       },
       {
-        "name": "score",
-        "args": {
-          "i18n": [
-            "lane"
-          ],
-          "lane": "left"
-        }
+        name: 'score',
+        args: {
+          i18n: ['lane'],
+          lane: 'left',
+        },
       },
       {
         name: 'score',
@@ -2187,6 +2187,10 @@ const testEvent = [
             },
           },
           day_or_night: 'night',
+          player_sides: {
+            day: 2348342,
+            night: 2348343,
+          },
         },
       },
     ],

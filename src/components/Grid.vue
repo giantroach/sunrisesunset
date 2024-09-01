@@ -461,19 +461,28 @@ ul.grid > li.grid-col.selected {
   color: white;
   font-size: 1.5em;
   font-weight: bolder;
-  text-shadow: #666 1px 1px 1px, #666 -1px 1px 1px, #666 1px -1px 1px,
+  text-shadow:
+    #666 1px 1px 1px,
+    #666 -1px 1px 1px,
+    #666 1px -1px 1px,
     #666 -1px -1px 1px;
   background: linear-gradient(to bottom, transparent, #e9e9e9, transparent);
 }
 .overlay.success {
   color: #00cd6a;
-  text-shadow: #fff 1px 1px 1px, #fff -1px 1px 1px, #fff 1px -1px 1px,
+  text-shadow:
+    #fff 1px 1px 1px,
+    #fff -1px 1px 1px,
+    #fff 1px -1px 1px,
     #fff -1px -1px 1px;
   background: linear-gradient(to bottom, transparent, #ceffe7, transparent);
 }
 .overlay.danger {
   color: #eb7a00;
-  text-shadow: #fff 1px 1px 1px, #fff -1px 1px 1px, #fff 1px -1px 1px,
+  text-shadow:
+    #fff 1px 1px 1px,
+    #fff -1px 1px 1px,
+    #fff 1px -1px 1px,
     #fff -1px -1px 1px;
   background: linear-gradient(
     to bottom,

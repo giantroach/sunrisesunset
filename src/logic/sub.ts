@@ -30,7 +30,8 @@ export class Sub {
     private handData: Ref<HandData>,
     private scoreData: Ref<ScoreData>,
     private reincarnationData: Ref<ReincarnationData>,
-    private roundData: Ref<RoundData>
+    private roundData: Ref<RoundData>,
+    private observer: boolean
   ) {}
 
   public handle(notif: BgaNotification) {
@@ -97,7 +98,18 @@ export class Sub {
       case 'playCard': {
         const arg = notif.args as BgaPlayCardNotif;
         const gridID = Number(arg.gridID);
-        if (Number(arg.player_id) === Number(this.playerID.value)) {
+        const ignoreActivePlayer = arg.ignoreActivePlayer || false;
+        const playerSide = arg.playerSide;
+        if (
+          ignoreActivePlayer &&
+          Number(arg.player_id) === Number(this.playerID.value)
+        ) {
+          return;
+        }
+        if (
+          (this.observer && playerSide === 'day') ||
+          Number(arg.player_id) === Number(this.playerID.value)
+        ) {
           this.handData.value.cardIDs = this.handData.value.cardIDs?.filter(
             (ids) => {
               return ids.id !== arg.card.id;
@@ -111,7 +123,7 @@ export class Sub {
               cardDefs.mainCard.details?.[Number(cid)]?.stealth;
             this.gridData.value.cardIDs[col][row] = {
               cid: `mainCard${arg.card.type_arg}`,
-              meta: hasStealth ? [{ metaID: 'stealth' }] : [],
+              meta: hasStealth && !this.observer ? [{ metaID: 'stealth' }] : [],
             };
           }
           if (this.gridData.value.ghosts?.[col]?.[row]) {
@@ -135,10 +147,14 @@ export class Sub {
         const arg = notif.args as BgaUpdateCardNotif;
         const gridID = Number(arg.gridID);
         const c = arg.card;
+        const playerSide = arg.playerSide;
         let row = 0;
         let col = 0;
 
-        if (Number(arg.player_id) === Number(this.playerID.value)) {
+        if (
+          (this.observer && playerSide === 'day') ||
+          Number(arg.player_id) === Number(this.playerID.value)
+        ) {
           row = Math.floor(gridID / 3) + 3;
           col = gridID % 3;
         } else {
@@ -172,7 +188,10 @@ export class Sub {
         let toRow = 0;
         let toCol = 0;
 
-        if (Number(arg.player_id) === Number(this.playerID.value)) {
+        if (
+          Number(arg.player_id) === Number(this.playerID.value) ||
+          this.observer
+        ) {
           fromRow = Math.floor(fromGridID / 3) + 3;
           fromCol = fromGridID % 3;
           toRow = Math.floor(toGridID / 3) + 3;
@@ -305,10 +324,26 @@ export class Sub {
         const table = arg.table;
         const center = arg.center;
         const dayOrNight = arg.day_or_night;
+        const playerSides = arg.player_sides;
+
+        const isMySide = (pID: string) => {
+          const myPID = String(this.playerID.value);
+          if (!this.observer && pID === myPID) {
+            return true;
+          }
+
+          // observer is treated as sun player
+          if (this.observer && String(playerSides['day']) === pID) {
+            return true;
+          }
+
+          return false;
+        };
+
         for (const pID in score) {
           if (pID === 'center') {
             this.scoreData.value.centerScore = objToArray(score[pID]);
-          } else if (pID === String(this.playerID.value)) {
+          } else if (isMySide(pID)) {
             this.scoreData.value.myScore = objToArray(score[pID]);
           } else {
             this.scoreData.value.oppoScore = objToArray(score[pID]);
@@ -317,7 +352,7 @@ export class Sub {
 
         // update table (some might have stealth)
         for (const pID in table) {
-          if (pID === String(this.playerID.value)) {
+          if (isMySide(String(pID))) {
             table[pID].forEach((card) => {
               const gridID = Number(card.location_arg);
               const row = Math.floor(gridID / 3) + 3;

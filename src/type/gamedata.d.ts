@@ -50,7 +50,12 @@ interface Gamedata {
     [playerId: number | 'center']: number[];
   };
   winner?: string[];
-  player_side?: 'sun' | 'night';
+  player_side?: 'day' | 'night';
+  is_observer: boolean;
+  player_sides: {
+    day: string;
+    night: string;
+  };
 }
 
 export { CardMeta, Card, Score, Gamedata };
