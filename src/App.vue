@@ -475,7 +475,7 @@ defineExpose({
       </CtrlBar>
     </div>
 
-    <div id="player_hand">
+    <div id="player_hand" v-if="!gamedata.is_observer">
       <div class="card-header">
         <h3 id="inhand_header">
           <span>{{ i18n('Your Hand') }}:</span>
