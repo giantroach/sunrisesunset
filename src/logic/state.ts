@@ -166,6 +166,7 @@ class State {
         this.assign(this.gridData, 'selectableCol', []);
         this.assign(this.gridData, 'ghosts', []);
         this.setSubState('beforeCardSelect');
+        this.assign(this.ctrlBarData, 'type', 'playIsis');
         break;
       }
 

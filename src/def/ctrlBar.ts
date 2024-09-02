@@ -17,6 +17,10 @@ const ctrlBarDefs: { [barType in BarType]: CtrlBarDef } = {
     message: 'Choose a card to play.',
     buttonTypes: [],
   },
+  playIsis: {
+    message: 'Play the newly drawn card.',
+    buttonTypes: [],
+  },
   mulligan: {
     message: 'You may discard a card to draw a new card.',
     buttonTypes: ['mulligan', 'noMulligan'],

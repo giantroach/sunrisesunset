@@ -1,5 +1,7 @@
 const testDataBase = {};
-const playerID = 2348342;
+const playerID = 2348342; // day player
+// const playerID = 2348344; // observer
+const observer = true;
 
 const testData = [
   {
@@ -214,6 +216,7 @@ const testData = [
         controller: '',
       },
     },
+    is_observer: observer,
   },
 
   {
@@ -390,6 +393,7 @@ const testData = [
     player_table: [],
     oppo_table: [],
     tablespeed: '9',
+    is_observer: observer,
   },
 
   {
@@ -587,6 +591,7 @@ const testData = [
         controller: '2348343',
       },
     },
+    is_observer: observer,
   },
 
   {
@@ -1114,6 +1119,7 @@ const testData = [
       },
     },
     reincarnated_card_id: null,
+    is_observer: observer,
   },
 
   {
@@ -1366,6 +1372,7 @@ const testData = [
         controller: '2348343',
       },
     },
+    is_observer: observer,
   },
 
   {
@@ -1643,6 +1650,7 @@ const testData = [
     decision: {
       decision_type: 'none',
     },
+    is_observer: observer,
   },
 ];
 

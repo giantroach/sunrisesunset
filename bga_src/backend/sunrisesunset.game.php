@@ -1514,7 +1514,6 @@ class SunriseSunset extends Table
       'round' => $round_num,
     ]);
 
-    // FIXME: this does not work with observer
     foreach ($players as $key => $value) {
       $player_id = $key;
       $player_cards = array_values(

@@ -5,6 +5,7 @@ type BarType =
   | 'cancelable'
   | 'waitingOppo'
   | 'turnInit'
+  | 'playIsis'
   | 'mulligan'
   | 'noValidTarget'
   | 'chooseGrid'
