@@ -13,12 +13,12 @@ import { CtrlBarData } from './type/ctrl-bar.d';
 import { CardMeta } from './type/card.d';
 import { State, CurrentState } from './logic/state';
 import { Sub } from './logic/sub';
-import Hand from './components/Hand.vue';
-import Grid from './components/Grid.vue';
-import CtrlBar from './components/CtrlBar.vue';
+import Hand from './components/hand.vue';
+import Grid from './components/grid.vue';
+import CtrlBar from './components/ctrl-bar.vue';
 import { objToArray } from './util/util';
 import cardsetImgUrl from './assets/cardset.png';
-import { defaultCtrlBarData } from './def/ctrlBar';
+import { defaultCtrlBarData } from './def/ctrl-bar';
 import { cardDefs } from './def/card';
 
 let bgaRequest: Ref<BgaRequest> = ref({

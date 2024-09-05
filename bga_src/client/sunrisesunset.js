@@ -78,6 +78,44 @@ define([
         i18n = window['_'];
         vue.translation = {
           'Sunrise Sunset': _('Sunrise Sunset'),
+          // from def/card.ts
+          '${Placement} Choose a unit already placed in this lane. Disable stealth and ability from the unit.': _('${Placement} Choose a unit already placed in this lane. Disable stealth and ability from the unit.'),
+          '${Placement} Discard a non-stealth unit in this lane. The owner draws a unit card from the pile and immediately places it on the same lane.': _('${Placement} Discard a non-stealth unit in this lane. The owner draws a unit card from the pile and immediately places it on the same lane.'),
+          '${Combat} Increases ${Power} in this lane by 1.': _('${Combat} Increases ${Power} in this lane by 1.'),
+          '${Combat} Receive 1 additional damage if you lose in this lane.': _('${Combat} Receive 1 additional damage if you lose in this lane.'),
+          '${Combat} Power of APIS becomes 15 if ${Power} in this lane is either 6 or more than 6 or 0 or lower than 0.': _('${Combat} Power of APIS becomes 15 if ${Power} in this lane is either 6 or more than 6 or 0 or lower than 0.'),
+          '${Placement} Choose and disable stealth from a unit (regardless of the lane).': _('${Placement} Choose and disable stealth from a unit (regardless of the lane).'),
+          'Tefnut has no ability.': _('Tefnut has no ability.'),
+          '${Combat} Draw the combat in this lane if the power gap is 4+ (prior to Osiris).': _('${Combat} Draw the combat in this lane if the power gap is 4+ (prior to Osiris).'),
+          '${Placement} Choose a stealth unit in this lane. Move it to another lane.': _('${Placement} Choose a stealth unit in this lane. Move it to another lane.'),
+          '${Combat} Change ${Power} in this lane to 0. (Apply this before any other combat abilities.)': _('${Combat} Change ${Power} in this lane to 0. (Apply this before any other combat abilities.)'),
+          '${Combat} The one with lower power wins in this lane (unless there is a draw).': _('${Combat} The one with lower power wins in this lane (unless there is a draw).'),
+          '${Combat} Deals 1 additional damage to the opponent if you win in this lane.': _('${Combat} Deals 1 additional damage to the opponent if you win in this lane.'),
+          '${Combat} Reduces ${Power} in this lane by 2.': _('${Combat} Reduces ${Power} in this lane by 2.'),
+          '(Reviealed at the combat phase!)': _('(Reviealed at the combat phase!)'),
+          'Stealth and the ability are disabled by "Anubis".': _('Stealth and the ability are disabled by "Anubis".'),
+          'Stealth is disabled by "Ra".': _('Stealth is disabled by "Ra".'),
+          'Because of stealth, the contents of this card are invisible to your opponent.': _('Because of stealth, the contents of this card are invisible to your opponent.'),
+          // from def/ctrlBar.ts
+          'Wait for your turn.': _('Wait for your turn.'),
+          'Choose a card to play.': _('Choose a card to play.'),
+          'Play the newly drawn card.': _('Play the newly drawn card.'),
+          'You may discard a card to draw a new card.': _('You may discard a card to draw a new card.'),
+          'No valid target.': _('No valid target.'),
+          'Choose a lane to place.': _('Choose a lane to place.'),
+          'Choose a unit to disable stealth and ability.': _('Choose a unit to disable stealth and ability.'),
+          'Choose a unit to discard.': _('Choose a unit to discard.'),
+          'Choose a unit to disable stealth.': _('Choose a unit to disable stealth.'),
+          'Choose a stealth unit to move.': _('Choose a stealth unit to move.'),
+          'Choose a lane to move.': _('Choose a lane to move.'),
+          "Press 'Submit' to confirm.": _("Press 'Submit' to confirm."),
+          "Press 'Confirm' to continue.": _("Press 'Confirm' to continue."),
+          // from def/ctrl-button.ts
+          'Cancel': _('Cancel'),
+          'Submit': _('Submit'),
+          'Discard and draw': _('Discard and draw'),
+          'No discard': _('No discard'),
+          'Confirm': _('Confirm'),
         };
 
         // Setting up player boards
