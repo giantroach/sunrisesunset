@@ -2,7 +2,7 @@
 import { Ref, ref } from 'vue';
 import { CardID } from '../type/hand.d';
 import { SizeDef } from '../type/hand-def.d';
-import GameCard from './GameCard.vue';
+import GameCard from './game-card.vue';
 import { handDefs } from '../def/hand';
 
 const props = defineProps<{

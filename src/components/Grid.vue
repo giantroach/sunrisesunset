@@ -6,8 +6,8 @@ import { throttle } from '../util/util';
 
 import { gridDef } from '../def/grid';
 
-import GameCard from './GameCard.vue';
-import Aura from './Aura.vue';
+import GameCard from './game-card.vue';
+import Aura from './aura.vue';
 
 const props = defineProps<{
   data: GridData;

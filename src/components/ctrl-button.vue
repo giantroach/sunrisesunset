@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue';
 import type { Ref } from 'vue';
-import { ctrlButtonDefs as d } from '../def/ctrlButton';
+import { ctrlButtonDefs as d } from '../def/ctrl-button';
 import type { ButtonType } from '../type/ctrl-button.d';
 
 const props = defineProps<{

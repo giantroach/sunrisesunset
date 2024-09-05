@@ -3,8 +3,8 @@ import { inject, ref } from 'vue';
 import type { Ref } from 'vue';
 import { ButtonType } from '../type/ctrl-button.d';
 import { BarType } from '../type/ctrl-bar.d';
-import { ctrlBarDefs } from '../def/ctrlBar';
-import CtrlButton from './CtrlButton.vue';
+import { ctrlBarDefs } from '../def/ctrl-bar';
+import CtrlButton from './ctrl-button.vue';
 
 const props = defineProps<{
   type: BarType;

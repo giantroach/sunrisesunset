@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue';
 import { watch } from 'vue';
-import Modal from './Modal.vue';
+import Modal from './modal.vue';
 import {
   SizeDef,
   MiniDef,
