@@ -406,6 +406,7 @@ const getFormatText = (text: string): string => {
   border-radius: 5px;
   position: absolute;
   background-color: rgba(0, 0, 0, 0.4);
+  color: white;
   bottom: 0;
   right: 0;
   border: 1px solid white;
