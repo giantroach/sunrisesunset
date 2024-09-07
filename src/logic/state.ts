@@ -330,6 +330,7 @@ class State {
           break;
         }
         if (this.gridData.value.selectedCol?.includes(true)) {
+          this.assign(this.gridData, 'selectableCol', [false, false, false]);
           this.setSubState('afterTargetSelect');
           break;
         }
