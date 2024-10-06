@@ -144,6 +144,11 @@ export class Sub {
               meta: [],
             };
           }
+          if (this.gridData.value.highlighted) {
+            this.gridData.value.highlighted = [];
+            this.gridData.value.highlighted[col] = [];
+            this.gridData.value.highlighted[col][row] = true;
+          }
         }
         break;
       }

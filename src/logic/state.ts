@@ -412,6 +412,15 @@ class State {
         break;
 
       case 'playerTurn:afterSubmit': {
+        const gridID = this.getSelectedGrid(0).id;
+        if (gridID !== null) {
+          const row = Math.floor(gridID / 3) + 3;
+          const col = gridID % 3;
+          const highlighted = [] as boolean[][];
+          highlighted[col] = [];
+          highlighted[col][row] = true;
+          this.assign(this.gridData, 'highlighted', highlighted);
+        }
         break;
       }
 

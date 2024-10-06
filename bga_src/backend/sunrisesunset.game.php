@@ -641,6 +641,20 @@ class SunriseSunset extends Table
     return self::getObjectFromDB($sql);
   }
 
+  function getLaneFromGridID($gridID)
+  {
+    $col = intval($gridID) % 3;
+    switch ($col) {
+      case 0:
+        return 'left';
+      case 1:
+        return 'center';
+      case 2:
+        return 'right';
+    }
+    return '';
+  }
+
   function isValidPlayGrid($gridID, $playerID)
   {
     $sql =
@@ -1341,14 +1355,17 @@ class SunriseSunset extends Table
     self::notifyPlayer(
       $actorID,
       'playCard',
-      clienttranslate('${player_name} played a card.'),
+      // FIXME: add line name
+      clienttranslate('${player_name} played a card at ${lane} lane.'),
       [
+        'i18n' => ['lane'],
         'player_id' => $actorID,
         'player_name' => self::getActivePlayerName(),
         'card' => $cardInfo,
         'cards' => $numberOfcards,
         'gridID' => $gridID,
         'ignoreActivePlayer' => false,
+        'lane' => $this->getLaneFromGridID($gridID),
       ]
     );
 
@@ -1356,8 +1373,11 @@ class SunriseSunset extends Table
     if ($c->stealth) {
       self::notifyAllPlayers(
         'playCard',
-        clienttranslate('${player_name} played a stealth card.'),
+        clienttranslate(
+          '${player_name} played a stealth card at ${lane} lane.'
+        ),
         [
+          'i18n' => ['lane'],
           'player_id' => $actorID,
           'player_name' => self::getActivePlayerName(),
           'card' => [
@@ -1371,13 +1391,15 @@ class SunriseSunset extends Table
           'gridID' => $gridID,
           'ignoreActivePlayer' => true,
           'playerSide' => $this->getPlayerSide($actorID),
+          'lane' => $this->getLaneFromGridID($gridID),
         ]
       );
     } else {
       self::notifyAllPlayers(
         'playCard',
-        clienttranslate('${player_name} played a card.'),
+        clienttranslate('${player_name} played a card at ${lane} lane.'),
         [
+          'i18n' => ['lane'],
           'player_id' => $actorID,
           'player_name' => self::getActivePlayerName(),
           'card' => $cardInfo,
@@ -1385,6 +1407,7 @@ class SunriseSunset extends Table
           'gridID' => $gridID,
           'ignoreActivePlayer' => true,
           'playerSide' => $this->getPlayerSide($actorID),
+          'lane' => $this->getLaneFromGridID($gridID),
         ]
       );
     }
