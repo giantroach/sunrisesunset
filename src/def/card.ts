@@ -60,7 +60,7 @@ const cardDefs: { [cardType: string]: CardDef } = {
       },
       4: {
         name: 'Apis',
-        text: '${Combat} Power of APIS becomes 15 if ${Power} in this lane is either 6 or more than 6 or 0 or lower than 0.',
+        text: '${Combat} Power of Apis becomes 15 if ${Power} in this lane is either 6 or more than 6 or 0 or lower than 0.',
         power: {
           fixed: 0,
           center: 1,

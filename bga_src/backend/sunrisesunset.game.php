@@ -546,7 +546,7 @@ class SunriseSunset extends Table
     // notify to update the score
     self::notifyAllPlayers(
       'updateScore',
-      clienttranslate('${playerName} scored.'),
+      clienttranslate('${playerName} dealt a damage.'),
       [
         'playerID' => $playerID,
         'playerName' => $playerName,
@@ -1825,7 +1825,7 @@ class SunriseSunset extends Table
 
           if ($score2 == $score1) {
             $this->notifyScore(
-              clienttranslate('[${lane} lane] ${scoreA} vs ${scoreB}. Tied.'),
+              clienttranslate('[${lane} lane] ${scoreA} vs ${scoreB}. Drawn.'),
               $lane,
               $scores,
               'tie'
@@ -1837,7 +1837,7 @@ class SunriseSunset extends Table
           if ($hasEclipse[$pos] && abs($score2 - $score1) >= 4) {
             $this->notifyScore(
               clienttranslate(
-                '[${lane} lane] ${scoreA} vs ${scoreB}. Tied (tied by "Eclipse").'
+                '[${lane} lane] ${scoreA} vs ${scoreB}. Drawn (drawn by "Eclipse").'
               ),
               $lane,
               $scores,
