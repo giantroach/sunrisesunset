@@ -1,4 +1,4 @@
-import { CardID } from './Card.d';
+import { CardID } from './card.d';
 
 type OverlayType = 'text';
 type OverlayClass = 'largeCenter';
