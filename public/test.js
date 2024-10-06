@@ -1,7 +1,7 @@
 const testDataBase = {};
 const playerID = 2348342; // day player
 // const playerID = 2348344; // observer
-const observer = true;
+const observer = false;
 
 const testData = [
   {
@@ -1812,6 +1812,24 @@ const testEvent = [
     name: 'playCard',
     args: {
       player_id: 2348342,
+      player_name:
+      '<!--PNS--><span class="playername" style="color:#ff0000;">giantroach0</span><!--PNE-->',
+      card: {
+        id: '15',
+        type: 'standard',
+        type_arg: '13',
+        location: 'hand',
+        location_arg: '2348342',
+        meta: '',
+      },
+      cards: '3',
+      gridID: '0',
+    },
+  },
+  {
+    name: 'playCard',
+    args: {
+      player_id: 2348343,
       player_name:
         '<!--PNS--><span class="playername" style="color:#ff0000;">giantroach0</span><!--PNE-->',
       card: {

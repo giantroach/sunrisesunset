@@ -169,6 +169,14 @@ const isSelected = (idx: number, x: number, y: number): boolean => {
   return sel;
 };
 
+const isHighlighted = (x: number, y: number): boolean => {
+  return data.value.highlighted &&
+    data.value.highlighted[x] &&
+    data.value.highlighted[x][y]
+    ? true
+    : false;
+};
+
 const isColSelectable = (x: number): boolean => {
   if (!props.active) {
     return false;
@@ -292,6 +300,7 @@ const getOverlayPos = (overlay: Overlay[]): OverlayWithPos[] => {
             selected0: isSelected(0, idx, idy),
             selectable1: isSelectable(1, idx, idy),
             selected1: isSelected(1, idx, idy),
+            highlighted: isHighlighted(idx, idy),
             day: props.round % 2 !== 0,
             night: props.round % 2 === 0,
           }"
@@ -431,6 +440,10 @@ ul.grid > li.grid-col.selectable {
 ul.grid > li.grid-col.selected {
   border: 3px solid #fffc00;
   box-shadow: 0 0 5px 5px rgb(255 252 0 / 50%);
+}
+li.grid-cell.highlighted:not(.selected0, .selected1) {
+  border: 3px solid #ff4400;
+  box-shadow: 0 0 5px 5px rgb(255 68 0 / 50%);
 }
 .cellOverlay {
   display: flex;

@@ -42,6 +42,7 @@ const gridData: Ref<GridData> = ref({
   ghosts: [],
   selectable: [],
   selected: [],
+  highlighted: [],
   selectableCol: [],
   selectedCol: [],
   exclusiveSelect: true,
