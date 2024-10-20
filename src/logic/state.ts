@@ -841,7 +841,7 @@ class State {
           if (result === 'tie') {
             this.gridData.value.overlay[idx - 1] = {
               type: 'text',
-              data: 'Tie',
+              data: 'Draw',
               pos: `col.${idx - 1}.bottom`,
               cssClass: 'largeCenter',
             };
