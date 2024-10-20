@@ -47,8 +47,10 @@ export class Sub {
         this.scoreData.value.centerScore = [];
         this.scoreData.value.myScore = [];
         this.scoreData.value.oppoScore = [];
+        this.scoreData.value.result = [];
         this.gridData.value.overlay = [];
         this.gridData.value.cellOverlay = [];
+        this.gridData.value.highlighted = [];
 
         // update table
         if (!this.gridData || !this.gridData.value.cardIDs) {
