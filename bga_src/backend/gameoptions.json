@@ -3,9 +3,9 @@
     "name": "Number of scores to win",
     "values": {
       "1": { "name": "1 scores" },
-      "2": { "name": "2 scores (default)" },
-      "3": { "name": "3 scores" }
+      "2": { "name": "2 scores" },
+      "3": { "name": "3 scores (default)" }
     },
-    "default": 2
+    "default": 3
   }
 }
