@@ -461,8 +461,10 @@ li.grid-cell.highlighted:not(.selected0, .selected1) {
   color: white;
   font-size: 4em;
   font-weight: bolder;
-  text-stroke: 2px #000;
-  -webkit-text-stroke: 2px #000;
+  text-stroke: 8px #000;
+  -webkit-text-stroke: 8px #000;
+  text-shadow: #000 0 0 20px;
+  paint-order: stroke fill;
 }
 
 .overlay {
