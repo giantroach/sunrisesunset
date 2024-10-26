@@ -112,7 +112,13 @@ li {
   transition: margin-left 0.5s;
   transition: margin-right 0.5s;
   border: 2px solid transparent;
+
+  @media screen and (max-width: 800px) {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 }
+
 .selectable {
   border: 2px solid #00e9eb;
   box-shadow: 0 0 5px 5px rgb(0 233 235 / 50%);
@@ -126,6 +132,11 @@ li {
   margin-right: 30px;
   transition: margin-left 0.5s;
   transition: margin-right 0.5s;
+
+  @media screen and (max-width: 800px) {
+    margin-left: 60px;
+    margin-right: 60px;
+  }
 }
 
 .aura {

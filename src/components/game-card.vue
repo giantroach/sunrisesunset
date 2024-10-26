@@ -154,13 +154,53 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     // wait for render
     const mcElm = document.querySelector('#card-modal-' + props.id);
     const body = document.body;
-    if (!mcElm) {
+    const gcElm = document.getElementById('overall-content');
+    if (!mcElm || !gcElm) {
       return;
     }
     const mcRect = mcElm.getBoundingClientRect();
+    const bdRect = body.getBoundingClientRect();
+    const gcRect = gcElm.getBoundingClientRect();
+    const gapY = gcRect.top;
+    const gapX = gcRect.left;
+
+    // detect zoom
+    const match = /zoom: ?([.0-9]+)/.exec(gcElm.style.cssText);
+    if (match) {
+      // mobile special case
+      const percentage = Number(match[1]);
+
+      const stretchedY =
+        (centerY - gapY) / percentage + gapY - mcRect.height / 2 / percentage;
+      modalTop.value = stretchedY;
+
+      let stretchedX =
+        (centerX - gapX) / percentage + gapX - mcRect.width / 2 / percentage;
+      modalLeft.value = stretchedX > 0 ? stretchedX : 0;
+
+      emit('showDetail', props.id);
+
+      setTimeout(() => {
+        const mcRect2 = mcElm.getBoundingClientRect();
+        const ch = document.body.clientHeight;
+        const cw = document.body.clientWidth;
+        if (ch < mcRect2.bottom) {
+          const adjust = (mcRect2.bottom - ch) / percentage;
+          modalTop.value -= adjust;
+        }
+        if (cw < mcRect2.right) {
+          const adjust = (mcRect2.right - cw) / percentage;
+          modalLeft.value -= adjust;
+        }
+        if (modalLeft.value < 0) {
+          modalLeft.value = 0;
+        }
+      });
+      return;
+    }
+
     let mcTop = centerY - mcRect.height / 2;
     let mcLeft = centerX - mcRect.width / 2;
-    const bdRect = body.getBoundingClientRect();
     if (mcTop + mcRect.height > bdRect.height) {
       mcTop = bdRect.height - mcRect.height;
     }
