@@ -135,14 +135,27 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
   const elm = evt.srcElement as HTMLElement;
   const rect = elm.getBoundingClientRect();
 
+  // detect zoom
+  const gcElm = document.getElementById('overall-content');
+  if (!gcElm) {
+    return;
+  }
+  const match = /zoom: ?([.0-9]+)/.exec(gcElm.style.cssText);
+  let percentage = 1;
+  if (match) {
+    // mobile special case
+    percentage = Number(match[1]);
+  }
+
   // find center coordinate
-  const centerY = rect.top + rect.height / 2;
+  const centerY = (rect.top + window.scrollY - rect.height / 2) / percentage;
+
   let centerX = 0;
   if (detailPos.value === 'right') {
     // *2 because it is center
-    centerX = rect.right + window.scrollX + rect.width * 2;
+    centerX = (rect.right + window.scrollX + rect.width * 2) / percentage;
   } else {
-    centerX = rect.left + window.scrollX + rect.width / 2;
+    centerX = (rect.left + window.scrollX + rect.width / 2) / percentage;
   }
   modal.value = true;
   duringAnim = true;
@@ -160,58 +173,20 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     }
     const mcRect = mcElm.getBoundingClientRect();
     const bdRect = body.getBoundingClientRect();
-    const gcRect = gcElm.getBoundingClientRect();
-    const gapY = gcRect.top;
-    const gapX = gcRect.left;
 
-    // detect zoom
-    const match = /zoom: ?([.0-9]+)/.exec(gcElm.style.cssText);
-    if (match) {
-      // mobile special case
-      const percentage = Number(match[1]);
-
-      const stretchedY =
-        (centerY - gapY) / percentage + gapY - mcRect.height / 2 / percentage;
-      modalTop.value = stretchedY;
-
-      let stretchedX =
-        (centerX - gapX) / percentage + gapX - mcRect.width / 2 / percentage;
-      modalLeft.value = stretchedX > 0 ? stretchedX : 0;
-
-      emit('showDetail', props.id);
-
-      setTimeout(() => {
-        const mcRect2 = mcElm.getBoundingClientRect();
-        const ch = document.body.clientHeight;
-        const cw = document.body.clientWidth;
-        if (ch < mcRect2.bottom) {
-          const adjust = (mcRect2.bottom - ch) / percentage;
-          modalTop.value -= adjust;
-        }
-        if (cw < mcRect2.right) {
-          const adjust = (mcRect2.right - cw) / percentage;
-          modalLeft.value -= adjust;
-        }
-        if (modalLeft.value < 0) {
-          modalLeft.value = 0;
-        }
-      });
-      return;
-    }
-
-    let mcTop = centerY - mcRect.height / 2;
-    let mcLeft = centerX - mcRect.width / 2;
+    let mcTop = centerY - mcRect.height / 2 / percentage;
+    let mcLeft = centerX - mcRect.width / 2 / percentage;
     if (mcTop + mcRect.height > bdRect.height) {
       mcTop = bdRect.height - mcRect.height;
     }
     // bdRect.height depends on all the items below
-    const maxTop = window.innerHeight - mcRect.height;
-    if (mcTop > maxTop) {
-      mcTop = maxTop;
-    }
-    if (mcLeft + mcRect.width > bdRect.width) {
-      mcLeft = bdRect.width - mcRect.width;
-    }
+    // const maxTop = window.innerHeight / percentage - mcRect.height / percentage;
+    // if (mcTop > maxTop) {
+    //   mcTop = maxTop;
+    // }
+    // if (mcLeft + mcRect.width > bdRect.width) {
+    //   mcLeft = bdRect.width - mcRect.width;
+    // }
     modalTop.value = mcTop > minModalTop ? mcTop : minModalTop;
     modalLeft.value = mcLeft > 0 ? mcLeft : 0;
 
@@ -373,7 +348,7 @@ const getFormatText = (text: string): string => {
         width: 100,
         height: size.height,
         top: modalTop + 'px',
-        left: modalLeft + parseInt(size.width, 10) + 10 + 'px',
+        left: modalLeft + parseInt(size.width, 10) - 110 + 'px',
         borderRadius: size.radius,
       }"
     >
@@ -402,7 +377,7 @@ const getFormatText = (text: string): string => {
 }
 .card-modal,
 .detail-meta-modal {
-  position: fixed;
+  position: absolute;
   z-index: 1000;
   animation: fadein 0.4s ease-out forwards;
 }
@@ -460,7 +435,7 @@ ul.detail-meta-modal {
   margin: 0;
 
   > li > div {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border-radius: 5px;
     width: 100px;

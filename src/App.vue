@@ -512,6 +512,7 @@ defineExpose({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  position: relative;
 }
 #player_hand > h3,
 #common_table > h3 {
