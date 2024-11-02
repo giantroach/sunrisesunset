@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue';
 import { watch } from 'vue';
-import Modal from './modal.vue';
 import {
   SizeDef,
   MiniDef,
@@ -12,6 +11,7 @@ import { CardMeta } from '../type/card.d';
 import { cardMetaDefs } from '../def/card';
 import type { Ref } from 'vue';
 import { cardDefs } from '../def/card';
+import { throttle } from '../util/util';
 
 export interface Size {
   // xRatio: number;
@@ -28,6 +28,7 @@ const props = defineProps<{
   ghost?: boolean;
   detailPos: 'center' | 'right';
   meta?: CardMeta[];
+  modalScale?: number;
 }>();
 
 const emit = defineEmits(['selectCard', 'showDetail', 'hideDetail']);
@@ -53,7 +54,7 @@ const i18n: Ref<any> = inject('i18n') || ref('');
 const bgPos: Ref<string> = ref('0 0');
 const bgPosMini: Ref<string> = ref('0 0');
 const onlyMini: Ref<boolean> = ref(false);
-let minModalTop = 0;
+// let minModalTop = 0;
 
 // tweaks related to show details
 let disableShowDetailsUntilMouseOut = false;
@@ -99,7 +100,7 @@ const updateDef = () => {
   }
   bgPosMini.value = getBgPos(def.miniDef.sprite, def.miniDef.size, idx);
   onlyMini.value = def.details?.[idx]?.onlyMini || false;
-  minModalTop = def.minModalTop || 0;
+  // minModalTop = def.minModalTop || 0;
   placeholderDefs = def.placeholder?.defs || [];
   placeholderSize = def.placeholder?.size || {
     width: '0',
@@ -137,7 +138,8 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
 
   // detect zoom
   const gcElm = document.getElementById('overall-content');
-  if (!gcElm) {
+  const pgElm = document.getElementById('page-content');
+  if (!gcElm || !pgElm) {
     return;
   }
   const match = /zoom: ?([.0-9]+)/.exec(gcElm.style.cssText);
@@ -148,62 +150,71 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
   }
 
   // find center coordinate
-  const centerY = (rect.top + window.scrollY - rect.height / 2) / percentage;
+  const centerY = rect.height / 2 / percentage;
+  const centerX = rect.width / 2 / percentage;
 
-  let centerX = 0;
-  if (detailPos.value === 'right') {
-    // *2 because it is center
-    centerX = (rect.right + window.scrollX + rect.width * 2) / percentage;
-  } else {
-    centerX = (rect.left + window.scrollX + rect.width / 2) / percentage;
-  }
   modal.value = true;
   duringAnim = true;
   setTimeout(() => {
     duringAnim = false;
   }, 1000);
 
+  modalTop.value = centerY;
+  modalLeft.value = centerX;
+
   setTimeout(() => {
     // wait for render
     const mcElm = document.querySelector('#card-modal-' + props.id);
-    const body = document.body;
     const gcElm = document.getElementById('overall-content');
     if (!mcElm || !gcElm) {
       return;
     }
     const mcRect = mcElm.getBoundingClientRect();
-    const bdRect = body.getBoundingClientRect();
 
     let mcTop = centerY - mcRect.height / 2 / percentage;
-    let mcLeft = centerX - mcRect.width / 2 / percentage;
-    if (mcTop + mcRect.height > bdRect.height) {
-      mcTop = bdRect.height - mcRect.height;
+    let mcLeft = centerX;
+    if (detailPos.value === 'right') {
+      mcLeft += (mcRect.width - rect.width / 2) / percentage + 5;
+    } else {
+      mcLeft -= mcRect.width / 2 / percentage;
     }
-    // bdRect.height depends on all the items below
-    // const maxTop = window.innerHeight / percentage - mcRect.height / percentage;
+
+    // if (mcTop + mcRect.height > bdRect.height) {
+    //   mcTop = bdRect.height - mcRect.height;
+    // }
+    // // bdRect.height depends on all the items below
+    // const maxTop =
+    //   (window.innerHeight + window.scrollY - mcRect.height) / percentage;
     // if (mcTop > maxTop) {
     //   mcTop = maxTop;
     // }
-    // if (mcLeft + mcRect.width > bdRect.width) {
-    //   mcLeft = bdRect.width - mcRect.width;
-    // }
-    modalTop.value = mcTop > minModalTop ? mcTop : minModalTop;
-    modalLeft.value = mcLeft > 0 ? mcLeft : 0;
+    // // if (mcLeft + mcRect.width > bdRect.width) {
+    // //   mcLeft = bdRect.width - mcRect.width;
+    // // }
+    // modalTop.value = mcTop > minModalTop ? mcTop : minModalTop;
+    // modalLeft.value = mcLeft > 0 ? mcLeft : 0;
+    modalTop.value = mcTop;
+    modalLeft.value = mcLeft;
 
     emit('showDetail', props.id);
   });
 };
 
-const selectCard = (): void => {
-  if (!duringAnim) {
-    hideDetails(); // FIXME this shouldn't trigger during the anim
-  }
-  lastTimeHideDetails = Number(new Date());
-  if (!props.selectable) {
-    return;
-  }
-  emit('selectCard', props.id);
-};
+const selectCard = throttle(
+  (): void => {
+    if (!duringAnim) {
+      // hideDetails(); // FIXME this shouldn't trigger during the anim
+    }
+    lastTimeHideDetails = Number(new Date());
+    if (!props.selectable) {
+      return;
+    }
+    emit('selectCard', props.id);
+  },
+  100,
+  this,
+  true
+);
 
 const mouseOutFromMini = () => {
   if (detailPos.value === 'right') {
@@ -304,67 +315,60 @@ const getFormatText = (text: string): string => {
         </div>
       </div>
     </template>
-  </div>
 
-  <teleport to="#modals" v-if="modal">
-    <div
-      :id="'card-modal-' + id"
-      class="card card-modal"
-      :class="{
-        selectable: !props.selected && selectable,
-        selected: props.selected,
-      }"
-      v-bind:style="{
-        width: size.width,
-        height: size.height,
-        top: modalTop + 'px',
-        left: modalLeft + 'px',
-        backgroundImage: 'url(' + urlBase + image + ')',
-        borderRadius: size.radius,
-        backgroundPosition: bgPos,
-      }"
-      @click="selectCard"
-      v-on:mouseout="mouseOutFromDetail"
-    >
-      <div v-if="text" class="container-text">
-        <div
-          class="text"
-          v-if="text"
-          v-bind:style="{
-            top: textDef.offsetY,
-            borderWidth: `0 ${textDef.paddingSide || 0} ${
-              textDef.paddingBottom || 0
-            }`,
-          }"
-          v-html="getFormatText(i18n(text))"
-        ></div>
-      </div>
-    </div>
-
-    <ul
-      class="detail-meta-modal"
-      v-if="meta && meta.length"
-      v-bind:style="{
-        width: 100,
-        height: size.height,
-        top: modalTop + 'px',
-        left: modalLeft + parseInt(size.width, 10) - 110 + 'px',
-        borderRadius: size.radius,
-      }"
-    >
-      <li v-for="(m, idx) in meta" :key="idx">
-        <div v-if="m.metaID" class="meta-text">
-          {{ i18n(cardMetaDefs?.[m.metaID]?.text || '') }}
+    <template v-if="modal">
+      <div
+        :id="'card-modal-' + id"
+        class="card card-modal"
+        :class="{
+          selectable: !props.selected && selectable,
+          selected: props.selected,
+        }"
+        v-bind:style="{
+          width: size.width,
+          height: size.height,
+          top: modalTop + 'px',
+          left: modalLeft + 'px',
+          backgroundImage: 'url(' + urlBase + image + ')',
+          borderRadius: size.radius,
+          backgroundPosition: bgPos,
+          transform: `scale(${props.modalScale || 1})`,
+        }"
+        @click="selectCard"
+        v-on:mouseout="mouseOutFromDetail"
+      >
+        <div v-if="text" class="container-text">
+          <div
+            class="text"
+            v-if="text"
+            v-bind:style="{
+              top: textDef.offsetY,
+              borderWidth: `0 ${textDef.paddingSide || 0} ${
+                textDef.paddingBottom || 0
+              }`,
+            }"
+            v-html="getFormatText(i18n(text))"
+          ></div>
         </div>
-      </li>
-    </ul>
 
-    <Modal
-      v-if="detailPos === 'center'"
-      @hide-modal="mouseOutFromDetail"
-      :backdrop="false"
-    ></Modal>
-  </teleport>
+        <ul
+          class="detail-meta-modal"
+          v-if="meta && meta.length"
+          v-bind:style="{
+            width: 100,
+            height: size.height,
+            borderRadius: size.radius,
+          }"
+        >
+          <li v-for="(m, idx) in meta" :key="idx">
+            <div v-if="m.metaID" class="meta-text">
+              {{ i18n(cardMetaDefs?.[m.metaID]?.text || '') }}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </template>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -389,60 +393,64 @@ const getFormatText = (text: string): string => {
     opacity: 1;
   }
 }
+.detail-meta-modal {
+  top:0;
+  right:0;
+}
 
 .container-text,
-.text {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border: 0px solid transparent;
-  overflow-y: auto;
-  text-align: left;
-  font-size: small;
-  line-height: 16px;
-}
-.title {
-  position: absolute;
-}
-.selectable {
-  border: 3px solid #00e9eb;
-  box-shadow: 0 0 5px 2px #05fdff;
-}
-.selected {
-  border: 3px solid #fffc00;
-  box-shadow: 0 0 5px 2px #ffb644;
-}
-.ghost {
-  opacity: 0.67;
-}
-.detail-meta-mini {
-  border-radius: 5px;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.4);
-  color: white;
-  bottom: 0;
-  right: 0;
-  border: 1px solid white;
-  padding: 2px;
-  font-size: x-large;
-  pointer-events: none;
-}
-ul.detail-meta-modal {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-
-  > li > div {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border-radius: 5px;
-    width: 100px;
+  .text {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 0px solid transparent;
+    overflow-y: auto;
     text-align: left;
-    margin-bottom: 5px;
-    padding: 5px;
     font-size: small;
+    line-height: 16px;
   }
-}
+  .title {
+    position: absolute;
+  }
+  .selectable {
+    border: 3px solid #00e9eb;
+    box-shadow: 0 0 5px 2px #05fdff;
+  }
+  .selected {
+    border: 3px solid #fffc00;
+    box-shadow: 0 0 5px 2px #ffb644;
+  }
+  .ghost {
+    opacity: 0.67;
+  }
+  .detail-meta-mini {
+    border-radius: 5px;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    bottom: 0;
+    right: 0;
+    border: 1px solid white;
+    padding: 2px;
+    font-size: x-large;
+    pointer-events: none;
+  }
+  ul.detail-meta-modal {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    > li > div {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border-radius: 5px;
+      width: 100px;
+      text-align: left;
+      margin-bottom: 5px;
+      padding: 5px;
+      font-size: small;
+    }
+  }
 </style>

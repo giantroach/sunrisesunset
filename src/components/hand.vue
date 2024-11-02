@@ -4,6 +4,7 @@ import { CardID } from '../type/hand.d';
 import { SizeDef } from '../type/hand-def.d';
 import GameCard from './game-card.vue';
 import { handDefs } from '../def/hand';
+import { throttle } from '../util/util';
 
 const props = defineProps<{
   type: string;
@@ -47,7 +48,7 @@ const unselectExcept = (idx: number): void => {
   });
 };
 
-const selectHand = (idx: number): void => {
+const selectHand = throttle((idx: number): void => {
   if (!isSelectable(idx)) {
     return;
   }
@@ -59,7 +60,7 @@ const selectHand = (idx: number): void => {
     }
     emit('selectHand', idx);
   }
-};
+}, 100, this);
 </script>
 
 <template>

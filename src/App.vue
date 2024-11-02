@@ -440,7 +440,7 @@ defineExpose({
 <template>
   <link rel="preload" as="image" :href="urlBase + cardsetImgUrl" />
 
-  <div>
+  <div id="app-root">
     <div
       id="common_table"
       class="board"
@@ -506,7 +506,7 @@ defineExpose({
   top: -10000px;
   left: -10000px;
 }
-#app {
+#app-root {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

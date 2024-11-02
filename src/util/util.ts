@@ -1,12 +1,24 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const throttle = (func: any, msec: number, context: any): any => {
+const throttle = (
+  func: any,
+  msec: number,
+  context: any,
+  leading = false
+): any => {
   let t = 0;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return function (...args: any) {
+    if (leading && t === 0) {
+      func.apply(context, args);
+    }
     clearTimeout(t);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     t = setTimeout(() => {
-      func.apply(context, args);
+      if (!leading) {
+        func.apply(context, args);
+      }
+      clearTimeout(t);
+      t = 0;
     }, msec);
   };
 };

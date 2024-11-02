@@ -5,13 +5,35 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sunrise Sunset - local dev</title>
+    <style>
+      :root {
+        /* --bga-game-zoom: 0.4864864864864865; */
+        --bga-game-zoom: 1;
+      }
+      .bga-game-zoom {
+        zoom: var(--bga-game-zoom);
+      }
+    </style>
   </head>
   <body>
     <div id="overall-content">
-    <!-- <div id="overall-content" style="zoom: 0.65;"> -->
-      <div id="app"></div>
+      <!-- <div id="overall-content" style="--bga-game-zoom: 0.4864864864864865"> -->
+      <div
+        id="topbar"
+        style="height: 62px; margin-bottom: 5px; background-color: #ddd"
+      ></div>
+      <div
+        id="page-title"
+        class="bga-game-zoom"
+        style="line-height: 30px; background-color: #eeb"
+      >
+        asdf
+      </div>
+      <div id="page-content" class="bga-game-zoom">
+        <div id="app"></div>
+      </div>
+      <div style="height: 600px; background-color: brown">Game logs</div>
     </div>
-    <div style="height: 600px; background-color: brown">Game logs</div>
     <script type="module" src="/src/main.ts"></script>
     <script src="/test.js"></script>
   </body>

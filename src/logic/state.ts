@@ -78,11 +78,12 @@ class State {
     private ctrlBarData: Ref<CtrlBarData>,
     public observer: boolean
   ) {
-    this.throttledRefresh = throttle(this.refresh, 100, this);
+    // remove throttle as it causes skipping events
+    // this.throttledRefresh = throttle(this.refresh, 100, this);
+    this.throttledRefresh = this.refresh;
     watch(
       [this.gridData, this.handData, this.scoreData],
       () => {
-        // FIXME: there are too many of refresh calls
         this.throttledRefresh();
       },
       { deep: true }
