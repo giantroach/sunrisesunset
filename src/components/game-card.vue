@@ -26,7 +26,7 @@ const props = defineProps<{
   selectable: boolean; // for card detail modal
   selected?: boolean; // for card detail modal
   ghost?: boolean;
-  detailPos: 'center' | 'right';
+  detailPos: 'center' | 'side';
   meta?: CardMeta[];
   modalScale?: number;
 }>();
@@ -41,11 +41,12 @@ let prioritizeMini: Ref<boolean> = ref(props.prioritizeMini);
 let miniDef!: MiniDef | null;
 let placeholderDefs!: TextPlaceholder[];
 let placeholderSize!: SizeDef;
-const detailPos: Ref<'center' | 'right'> = ref(props.detailPos);
+const detailPos: Ref<'center' | 'side'> = ref(props.detailPos);
 
 const modal: Ref<boolean> = ref(false);
 const modalTop: Ref<number> = ref(-10000);
 const modalLeft: Ref<number> = ref(-10000);
+const modalScaleOrig: Ref<string> = ref('center');
 
 const id: Ref<string> = ref(props.id || '');
 const urlBase: Ref<string> = inject('urlBase') || ref('');
@@ -170,8 +171,16 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
 
     let mcTop = centerY - mcRect.height / 2 / percentage;
     let mcLeft = centerX;
-    if (detailPos.value === 'right') {
-      mcLeft += (mcRect.width - rect.width / 2) / percentage + 5;
+    if (detailPos.value === 'side') {
+      if (document.body.clientWidth / 2 < rect.left) {
+        // show left
+        mcLeft -= (rect.width / 2 + mcRect.width) / percentage + 5;
+        modalScaleOrig.value = 'center right';
+      } else {
+        // show right
+        mcLeft = (rect.width / percentage + 5) * props.modalScale;
+        modalScaleOrig.value = 'center left';
+      }
     } else {
       mcLeft -= mcRect.width / 2 / percentage;
     }
@@ -215,14 +224,14 @@ const selectCard = throttle(
 );
 
 const mouseOutFromMini = () => {
-  if (detailPos.value === 'right') {
+  if (detailPos.value === 'side') {
     hideDetails();
   }
   disableShowDetailsUntilMouseOut = false;
 };
 
 const mouseOutFromDetail = () => {
-  if (detailPos.value === 'right') {
+  if (detailPos.value === 'side') {
     return; // ignore
   }
   hideDetails();
@@ -331,6 +340,7 @@ const getFormatText = (text: string): string => {
           borderRadius: size.radius,
           backgroundPosition: bgPos,
           transform: `scale(${props.modalScale || 1})`,
+          transformOrigin: modalScaleOrig,
         }"
         @click="selectCard"
         v-on:mouseout="mouseOutFromDetail"

@@ -88,9 +88,6 @@ class State {
 
   public current: CurrentState = 'init';
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public refresh: any;
-
   public refresh() {
     switch (this.current) {
       case 'waitingForOtherPlayer':
