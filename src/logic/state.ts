@@ -8,7 +8,7 @@ import { watch } from 'vue';
 import { cardUtil } from '../def/card';
 import { gridUtil } from '../def/grid';
 import { handUtil } from '../def/hand';
-import { throttle } from '../util/util';
+// import { throttle } from '../util/util';
 
 type CurrentState =
   | 'init'

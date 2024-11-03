@@ -159,9 +159,6 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     duringAnim = false;
   }, 1000);
 
-  modalTop.value = centerY;
-  modalLeft.value = centerX;
-
   setTimeout(() => {
     // wait for render
     const mcElm = document.querySelector('#card-modal-' + props.id);
@@ -193,6 +190,7 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     // // }
     // modalTop.value = mcTop > minModalTop ? mcTop : minModalTop;
     // modalLeft.value = mcLeft > 0 ? mcLeft : 0;
+
     modalTop.value = mcTop;
     modalLeft.value = mcLeft;
 
