@@ -8,7 +8,6 @@ import { watch } from 'vue';
 import { cardUtil } from '../def/card';
 import { gridUtil } from '../def/grid';
 import { handUtil } from '../def/hand';
-import { throttle } from '../util/util';
 
 type CurrentState =
   | 'init'
@@ -78,21 +77,16 @@ class State {
     private ctrlBarData: Ref<CtrlBarData>,
     public observer: boolean
   ) {
-    this.throttledRefresh = throttle(this.refresh, 100, this);
     watch(
       [this.gridData, this.handData, this.scoreData],
       () => {
-        // FIXME: there are too many of refresh calls
-        this.throttledRefresh();
+        this.refresh();
       },
       { deep: true }
     );
   }
 
   public current: CurrentState = 'init';
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public throttledRefresh: any;
 
   public refresh() {
     switch (this.current) {
@@ -481,12 +475,12 @@ class State {
 
   public setState(state: CurrentState): void {
     this.current = state;
-    this.throttledRefresh();
+    this.refresh();
   }
 
   public setSubState(subState: SubState): void {
     this.current = this.current.replace(/:.+/, `:${subState}`) as CurrentState;
-    this.throttledRefresh();
+    this.refresh();
   }
 
   public cancelState(): void {
@@ -495,12 +489,12 @@ class State {
     if (/^playerTurn/.test(this.current)) {
       this.current = 'playerTurn:init';
       this.undoPlayedCard();
-      this.throttledRefresh();
+      this.refresh();
     }
     if (/^reincarnationTurn/.test(this.current)) {
       this.current = 'reincarnationTurn:init';
       this.undoPlayedCard();
-      this.throttledRefresh();
+      this.refresh();
     }
   }
 
@@ -513,19 +507,19 @@ class State {
       } else {
         this.current = 'mulligan:submitNoMulligan';
       }
-      this.throttledRefresh();
+      this.refresh();
     }
     if (/^playerTurn/.test(this.current)) {
       this.current = 'playerTurn:submit';
-      this.throttledRefresh();
+      this.refresh();
     }
     if (/^reincarnationTurn/.test(this.current)) {
       this.current = 'reincarnationTurn:submit';
-      this.throttledRefresh();
+      this.refresh();
     }
     if (/^endRound/.test(this.current)) {
       this.current = 'endRound:submit';
-      this.throttledRefresh();
+      this.refresh();
     }
   }
 

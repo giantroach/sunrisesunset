@@ -2270,7 +2270,7 @@ onclick="setState(document.getElementById('test-state').value)">
 </button>
 </div>
 `;
-document.body.prepend(base);
+document.getElementById('topbar').prepend(base);
 const sel1 = document.getElementById('test-data-idx');
 testData.forEach((d, idx) => {
   const opt = document.createElement('option');

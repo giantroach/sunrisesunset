@@ -355,11 +355,12 @@ const getOverlayPos = (overlay: Overlay[]): OverlayWithPos[] => {
                   ? true
                   : false
               "
-              :detailPos="'right'"
+              :detailPos="'side'"
               :selectable="
                 isSelectable(0, idx, idy) || isSelectable(1, idx, idy)
               "
               :meta="data.cardIDs?.[idx]?.[idy]?.meta"
+              :modalScale="1.667"
               @selectCard="selectGrid(getSelectableIdx(idx, idy), idx, idy)"
             ></GameCard>
           </template>
