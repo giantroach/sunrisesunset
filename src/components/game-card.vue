@@ -178,7 +178,7 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
         modalScaleOrig.value = 'center right';
       } else {
         // show right
-        mcLeft = (rect.width / percentage + 5) * props.modalScale;
+        mcLeft = (rect.width / percentage + 5) * (props.modalScale || 1);
         modalScaleOrig.value = 'center left';
       }
     } else {
