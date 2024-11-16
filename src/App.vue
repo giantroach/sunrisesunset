@@ -541,12 +541,16 @@ defineExpose({
 #player_hand,
 .board.day {
   background-color: rgba(255, 255, 255, 0.7);
-  color: #222;
+  .card-header {
+    color: #222;
+  }
 }
 
 .board.night {
   background-color: rgba(0, 0, 0, 0.3);
-  color: #eee;
+  .card-header {
+    color: #eee;
+  }
 }
 
 .card-header {
