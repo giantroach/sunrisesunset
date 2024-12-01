@@ -298,23 +298,29 @@ class SunriseSunset extends Table
       $result['reincarnated_col'] = $reincarnation['col'];
     }
 
-    $sql =
-      'SELECT ' .
-      'score_round round, ' .
-      'score_center_list center_list, ' .
-      'score_day_list day_list, ' .
-      'score_night_list night_list, ' .
-      'score_winner winner' .
-      ' FROM score ORDER BY score_round DESC LIMIT 1';
-    $scores = self::getObjectFromDB($sql);
-    if ($scores) {
-      $result['score'] = [];
-      $dayPlayerID = $this->getDayPlayerID();
-      $nightPlayerID = $this->getNightPlayerID();
-      $result['score']['center'] = explode(',', $scores['center_list']);
-      $result['score'][$dayPlayerID] = explode(',', $scores['day_list']);
-      $result['score'][$nightPlayerID] = explode(',', $scores['night_list']);
-      $result['winner'] = explode(',', $scores['winner']);
+    // return this only end of the round
+    if (
+      $this->getStateName() === 'endRound' ||
+      $this->getStateName() === 'gameEnd'
+    ) {
+      $sql =
+        'SELECT ' .
+        'score_round round, ' .
+        'score_center_list center_list, ' .
+        'score_day_list day_list, ' .
+        'score_night_list night_list, ' .
+        'score_winner winner' .
+        ' FROM score ORDER BY score_round DESC LIMIT 1';
+      $scores = self::getObjectFromDB($sql);
+      if ($scores) {
+        $result['score'] = [];
+        $dayPlayerID = $this->getDayPlayerID();
+        $nightPlayerID = $this->getNightPlayerID();
+        $result['score']['center'] = explode(',', $scores['center_list']);
+        $result['score'][$dayPlayerID] = explode(',', $scores['day_list']);
+        $result['score'][$nightPlayerID] = explode(',', $scores['night_list']);
+        $result['winner'] = explode(',', $scores['winner']);
+      }
     }
 
     // identifier
@@ -1089,7 +1095,6 @@ class SunriseSunset extends Table
     }
 
     self::notifyPlayer($p1, 'score', $msg, [
-      'i18n' => ['lane'],
       'lane' => $lane,
       'scoreA' => $scores[$p2],
       'scoreB' => $scores[$p1],
@@ -1098,7 +1103,6 @@ class SunriseSunset extends Table
     ]);
 
     self::notifyPlayer($p2, 'score', $msg, [
-      'i18n' => ['lane'],
       'lane' => $lane,
       'scoreA' => $scores[$p1],
       'scoreB' => $scores[$p2],
