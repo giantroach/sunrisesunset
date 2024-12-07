@@ -1176,6 +1176,7 @@ class SunriseSunset extends Table
           clienttranslate('"Horus/Seth" cannot be discarded.'),
           []
         );
+        return;
       }
 
       // check if it is in the hand
@@ -1192,6 +1193,7 @@ class SunriseSunset extends Table
           ),
           []
         );
+        return;
       }
 
       // discard and draw a card
