@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -12,6 +12,23 @@
       }
       .bga-game-zoom {
         zoom: var(--bga-game-zoom);
+      }
+      .pageheader {
+        background-color: #f8f8f8;
+        margin: 0 0 20px;
+        overflow: hidden;
+        padding: 12px 12px 0;
+        position: relative;
+      }
+      .pageheader h2 {
+        cursor: pointer;
+        margin: 0;
+        padding: 0 0 8px;
+      }
+      .pageheader_menu {
+        border-top: 1px solid #737373;
+        margin-left: -5px;
+        padding: 8px 0 0;
       }
     </style>
   </head>
@@ -32,6 +49,52 @@
       <div id="page-content" class="bga-game-zoom">
         <div id="app"></div>
       </div>
+
+      <div
+        id="maingameview_menufooter"
+        class="pageheader"
+        data-default-tab="howtoplay"
+      >
+        <h2>サンライズ・サンセット (Sunrise Sunset)</h2>
+        <div class="pageheader_menu">
+          <div
+            id="pageheader_howtoplay"
+            class="pageheader_menuitem pageheader_menuitemselected"
+          >
+            遊び方
+            <div class="pageheader_menuitembar"></div>
+          </div>
+          <div id="pageheader_competition" class="pageheader_menuitem">
+            コンペティション
+            <div class="pageheader_menuitembar"></div>
+          </div>
+          <div
+            id="pageheader_tournament"
+            class="pageheader_menuitem"
+            style="display: none"
+          >
+            大会
+            <div class="pageheader_menuitembar"></div>
+          </div>
+          <div id="pageheader_strategytips" class="pageheader_menuitem">
+            ゲームのヒント
+            <div class="pageheader_menuitembar"></div>
+          </div>
+          <div id="pageheader_options" class="pageheader_menuitem">
+            オプション
+            <div class="pageheader_menuitembar"></div>
+          </div>
+          <div id="pageheader_credits" class="pageheader_menuitem">
+            提供
+            <div class="pageheader_menuitembar"></div>
+          </div>
+          <div id="pageheader_music" class="pageheader_menuitem">
+            <i class="fa fa-music" aria-hidden="true"></i>
+            <div class="pageheader_menuitembar"></div>
+          </div>
+        </div>
+      </div>
+
       <div style="height: 600px; background-color: brown">Game logs</div>
     </div>
     <script type="module" src="/src/main.ts"></script>
