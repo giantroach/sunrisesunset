@@ -72,7 +72,7 @@ const selectHand = throttle((idx: number): void => {
       v-bind:style="{
         width: size.width,
         borderRadius: size.radius,
-        zIndex: idx,
+        zIndex: idx + 1,
       }"
       :class="{
         selectable: props.active && props.selectable[idx],
