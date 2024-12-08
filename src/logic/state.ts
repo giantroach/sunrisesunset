@@ -523,6 +523,10 @@ class State {
     }
   }
 
+  public hasMainState(mainStateNames: string[]): boolean {
+    return mainStateNames.some((s) => this.current.indexOf(s) === 0);
+  }
+
   private setPlayerGridSelectable(): void {
     const selectable: boolean[][][] = [[[], [], []]];
     for (let i = 0; i < 3; i += 1) {

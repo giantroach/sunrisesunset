@@ -188,7 +188,7 @@ const restore = () => {
             };
           }),
     });
-    handData.value.selectable?.push(true);
+    handData.value.selectable?.push(false);
   });
 
   // init grid data
@@ -312,7 +312,11 @@ const restore = () => {
       ? Number(gamedata.value.reincarnated_col)
       : null;
 
-  state.refresh();
+  if (state.hasMainState(['mulligan', 'playerTurn', 'reincarnationTurn'])) {
+    state.setSubState('init');
+  } else {
+    state.refresh();
+  }
   sub = new Sub(
     playerID,
     gridData,
