@@ -74,7 +74,7 @@ interface BgaUpdateCardNotif {
 
 interface BgaMulliganNotif {
   card?: Card;
-  discardedCardID?: string;
+  discarded?: Card;
 }
 
 interface BgaReincarnateCardNotif {

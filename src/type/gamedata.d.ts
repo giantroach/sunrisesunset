@@ -37,6 +37,7 @@ interface Gamedata {
   player_cards: Card[];
   player_table: Card[];
   oppo_table: Card[];
+  discarded: Card[];
   day_or_night: 'day' | 'night';
   round: string;
   center: {

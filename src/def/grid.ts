@@ -25,6 +25,12 @@ const gridDef: { [cardType: string]: GridDef } = {
     size: { width: '138px', height: '138px', radius: '10px' },
     margin: { row: '10px', column: '10px' },
   },
+  discard: {
+    type: 'square',
+    layout: '3x1',
+    size: { width: '138px', height: '138px', radius: '10px' },
+    margin: { row: '10px', column: '10px' },
+  }
 };
 
 const gridUtil = {
