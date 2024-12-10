@@ -28,6 +28,7 @@ export class Sub {
   constructor(
     public playerID: Ref<Number>, // public for testing purpose
     private gridData: Ref<GridData>,
+    private gridDataDiscard: Ref<GridData>,
     private handData: Ref<HandData>,
     private scoreData: Ref<ScoreData>,
     private reincarnationData: Ref<ReincarnationData>,
@@ -36,6 +37,7 @@ export class Sub {
   ) {}
 
   public handle(notif: BgaNotification) {
+    console.log('notif', notif);
     switch (notif.name) {
       case 'newRound': {
         const arg = notif.args as BgaNewRoundNotif;
@@ -75,6 +77,9 @@ export class Sub {
             this.getCenterIdx('right', dayOrNight, center.right.controller),
           meta: [],
         };
+
+        // update discard
+        this.gridDataDiscard.value.cardIDs = [];
 
         // update round
         this.roundData.value.round = roundNum;
@@ -229,14 +234,23 @@ export class Sub {
         // i.e. mulligan
         const arg = notif.args as BgaMulliganNotif;
         const c = arg.card;
-        const discardedCardID = arg.discardedCardID;
+        const discardedCard = arg.discarded;
+        const discardedCardID = discardedCard ? discardedCard.id : null;
 
-        if (discardedCardID) {
+        if (discardedCard && discardedCardID) {
           this.handData.value.cardIDs = this.handData.value.cardIDs?.filter(
             (ids) => {
               return ids.id !== discardedCardID;
             }
           );
+
+          if (!this.gridDataDiscard.value.cardIDs?.length) {
+            this.gridDataDiscard.value.cardIDs = [];
+          }
+          this.gridDataDiscard.value.cardIDs?.push([{
+            cid: `mainCard${discardedCard.type_arg}`,
+            meta: [],
+          }]);
         }
 
         if (c) {
