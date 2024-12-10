@@ -326,8 +326,17 @@ class SunriseSunset extends Table
     // return discard
     $discard = [];
     foreach ($this->getCardsInLocation('discard') as $card) {
-      // FIXME: facedown card
-      $discard[] = $card;
+      if (intval($card['location_arg']) === intval($current_player_id)) {
+        $discard[] = [
+          'id' => '0',
+          'type' => 'stealth',
+          'type_arg' => '17',
+          'location' => 'discard',
+          'location_arg' => '0',
+        ];
+      } else {
+        $discard[] = $card;
+      }
     }
     $result['discarded'] = $discard;
 
@@ -1206,7 +1215,11 @@ class SunriseSunset extends Table
 
       // discard and draw a card
       $newCard = $this->cards->pickCard('deck', $playerID);
-      $this->cards->moveCard($cardID, 'discard', 0);
+      if ($round_num === 1 && $playerID === $dayPlayerID) {
+        $this->cards->moveCard($cardID, 'discard', $playerID);
+      } else {
+        $this->cards->moveCard($cardID, 'discard', 0);
+      }
       $oldCard = $this->getCard($cardID);
 
       if ($round_num === 1 && $playerID === $dayPlayerID) {
