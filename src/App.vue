@@ -20,6 +20,7 @@ import { objToArray } from './util/util';
 import cardsetImgUrl from './assets/cardset.png';
 import { defaultCtrlBarData } from './def/ctrl-bar';
 import { cardDefs } from './def/card';
+import { LayoutGrid, Trash2 } from 'lucide-vue-next';
 
 let bgaRequest: Ref<BgaRequest> = ref({
   name: '',
@@ -497,6 +498,7 @@ defineExpose({
             }"
           >
             <h3 id="ontable_header">
+              <LayoutGrid :size="16" />
               <span>{{ i18n('On Table') }}</span>
             </h3>
           </li>
@@ -507,6 +509,7 @@ defineExpose({
             }"
           >
             <h3 id="discard_header">
+              <Trash2 :size="16" />
               <span>{{ i18n('Discarded') }}</span>
             </h3>
           </li>
@@ -665,12 +668,19 @@ defineExpose({
 .tabs h3 {
   margin: 0;
 }
+.tabs h3 svg {
+  margin-right: 5px;
+}
 .card-header .round-info,
 .card-header li:not(.selected) {
-   border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #aaa;
+  color: #888;
+}
+.night .card-header li:not(.selected) {
+  color: #bbb;
 }
 .card-header li.selected {
-  border: 1px solid #ddd;
+  border: 1px solid #aaa;
   border-bottom: 1px transparent;
 }
 </style>
