@@ -676,8 +676,14 @@ defineExpose({
   border-bottom: 1px solid #aaa;
   color: #888;
 }
+.card-header .round-info {
+  color: #222;
+}
 .night .card-header li:not(.selected) {
   color: #bbb;
+}
+.night .card-header .round-info {
+  color: #eee;
 }
 .card-header li.selected {
   border: 1px solid #aaa;
