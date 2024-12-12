@@ -247,10 +247,12 @@ export class Sub {
           if (!this.gridDataDiscard.value.cardIDs?.length) {
             this.gridDataDiscard.value.cardIDs = [];
           }
-          this.gridDataDiscard.value.cardIDs?.push([{
-            cid: `mainCard${discardedCard.type_arg}`,
-            meta: [],
-          }]);
+          this.gridDataDiscard.value.cardIDs?.push([
+            {
+              cid: `mainCard${discardedCard.type_arg}`,
+              meta: [],
+            },
+          ]);
         }
 
         if (c) {
@@ -270,12 +272,13 @@ export class Sub {
       }
 
       case 'reincarnateCard': {
-        // i.e. reincarnation
+        // i.e. Isis
         const arg = notif.args as BgaReincarnateCardNotif;
         const gridID = Number(arg.gridID);
         const playerID = Number(arg.player_id);
         const c = arg.card;
         const reincarnatedCol = arg.col;
+        const discardedCard = arg.discarded;
         let row = 0;
         let col = 0;
 
@@ -308,6 +311,16 @@ export class Sub {
         this.reincarnationData.value.reincarnatedCardID = c?.id || null;
         this.reincarnationData.value.reincarnatedCol =
           reincarnatedCol != null ? Number(reincarnatedCol) : null;
+
+        if (!this.gridDataDiscard.value.cardIDs?.length) {
+          this.gridDataDiscard.value.cardIDs = [];
+        }
+        this.gridDataDiscard.value.cardIDs?.push([
+          {
+            cid: `mainCard${discardedCard.type_arg}`,
+            meta: [],
+          },
+        ]);
 
         break;
       }

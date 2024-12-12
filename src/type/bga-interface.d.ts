@@ -83,6 +83,7 @@ interface BgaReincarnateCardNotif {
   card?: Card;
   col?: string;
   gridID: string;
+  discarded: Card;
 }
 
 interface BgaScoreNotif {

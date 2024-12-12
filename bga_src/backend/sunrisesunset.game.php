@@ -1055,6 +1055,7 @@ class SunriseSunset extends Table
 
     // remove card from a table
     $this->cards->moveCard($targetCard['id'], 'discard', 0);
+    $oldCard = $this->getCard($targetCard['id']);
     $newCard = $this->cards->pickCard('deck', $targetPlayerID);
     $msg = clienttranslate('"Isis" removed "${card_name}".');
     // this cannot be AllPlayers
@@ -1066,6 +1067,7 @@ class SunriseSunset extends Table
       'col' => $targetCol,
       'card_name' => $targetCardInfo->name,
       'card' => $newCard,
+      'discarded' => $oldCard,
     ]);
     self::notifyPlayer($nonTargetPlayerID, 'reincarnateCard', $msg, [
       'i18n' => ['card_name'],
@@ -1073,6 +1075,7 @@ class SunriseSunset extends Table
       'player_name' => $this->getPlayerName($targetPlayerID),
       'gridID' => $targetGridID,
       'card_name' => $targetCardInfo->name,
+      'discarded' => $oldCard,
     ]);
 
     // Update reincarnation table
