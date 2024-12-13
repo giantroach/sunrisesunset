@@ -674,19 +674,15 @@ defineExpose({
 .card-header .round-info,
 .card-header li:not(.selected) {
   border-bottom: 1px solid #aaa;
-  color: #888;
-}
-.card-header .round-info {
-  color: #222;
-}
-.night .card-header li:not(.selected) {
-  color: #bbb;
-}
-.night .card-header .round-info {
-  color: #eee;
 }
 .card-header li.selected {
   border: 1px solid #aaa;
   border-bottom: 1px transparent;
 }
+ .day .card-header li:not(.selected) {
+   color: #888;
+ }
+ .night .card-header li:not(.selected) {
+   color: #ccc;
+ }
 </style>
