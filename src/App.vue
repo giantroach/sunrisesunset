@@ -20,6 +20,7 @@ import { objToArray } from './util/util';
 import cardsetImgUrl from './assets/cardset.png';
 import { defaultCtrlBarData } from './def/ctrl-bar';
 import { cardDefs } from './def/card';
+import { LayoutGrid, Trash2 } from 'lucide-vue-next';
 
 let bgaRequest: Ref<BgaRequest> = ref({
   name: '',
@@ -38,6 +39,20 @@ let bgaNotifQueue: Promise<any> = Promise.resolve();
 let bgaStateQueue: Promise<any> = Promise.resolve();
 
 const gridData: Ref<GridData> = ref({
+  cardIDs: [],
+  ghosts: [],
+  selectable: [],
+  selected: [],
+  highlighted: [],
+  selectableCol: [],
+  selectedCol: [],
+  exclusiveSelect: true,
+  overlay: [],
+  cellOverlay: [],
+  active: false,
+});
+
+const gridDataDiscard: Ref<GridData> = ref({
   cardIDs: [],
   ghosts: [],
   selectable: [],
@@ -89,6 +104,7 @@ const gamedata: Ref<Gamedata> = ref({
   players: {},
   player_table: [],
   oppo_table: [],
+  discarded: [],
   tablespeed: '',
   day_or_night: 'day',
   round: '0',
@@ -110,6 +126,8 @@ const gamedata: Ref<Gamedata> = ref({
     night: '',
   },
 });
+
+const tab: Ref<string> = ref('table');
 
 let playerID = ref(-1);
 let sub: null | Sub = null;
@@ -257,6 +275,19 @@ const restore = () => {
     };
   });
 
+  gamedata.value.discarded.forEach((c) => {
+    if (!gridDataDiscard.value.cardIDs?.length) {
+      gridDataDiscard.value.cardIDs = [];
+    }
+    gridDataDiscard.value.cardIDs?.push([
+      {
+        id: c.id,
+        cid: `mainCard${c.type_arg}`,
+        meta: [],
+      },
+    ]);
+  });
+
   const isMySide = (pID: string) => {
     const myPID = String(playerID.value);
     if (!isObserver && pID === myPID) {
@@ -320,6 +351,7 @@ const restore = () => {
   sub = new Sub(
     playerID,
     gridData,
+    gridDataDiscard,
     handData,
     scoreData,
     reincarnationData,
@@ -419,6 +451,10 @@ const submitState = (mode?: string) => {
   state?.submitState(mode);
 };
 
+const selectTab = (dst: string) => {
+  tab.value = dst;
+};
+
 defineExpose({
   playerID,
   bgaStates,
@@ -454,20 +490,62 @@ defineExpose({
       }"
     >
       <div class="card-header">
-        <h3 id="ontable_header">
-          <span>{{ i18n('On Table') }}:</span>
-        </h3>
+        <ul class="tabs">
+          <li
+            @click="selectTab('table')"
+            :class="{
+              selected: tab === 'table',
+            }"
+          >
+            <h3 id="ontable_header">
+              <LayoutGrid :size="16" />
+              <span>{{ i18n('On Table') }}</span>
+            </h3>
+          </li>
+          <li
+            @click="selectTab('discard')"
+            :class="{
+              selected: tab === 'discard',
+            }"
+          >
+            <h3 id="discard_header">
+              <Trash2 :size="16" />
+              <span>{{ i18n('Discarded') }}</span>
+            </h3>
+          </li>
+        </ul>
         <div class="round-info">{{ i18n('Round') }}:{{ roundData.round }}</div>
       </div>
 
-      <Grid
-        ref="grid"
-        type="table"
-        :data="gridData"
-        :active="gridData.active"
-        :round="roundData.round"
+      <div
+        v-bind:style="{
+          display: tab === 'table' ? '' : 'none',
+        }"
       >
-      </Grid>
+        <Grid
+          ref="grid"
+          type="table"
+          :data="gridData"
+          :active="gridData.active"
+          :round="roundData.round"
+        >
+        </Grid>
+      </div>
+
+      <div
+        v-bind:style="{
+          display: tab === 'discard' ? '' : 'none',
+        }"
+      >
+        <Grid
+          ref="grid2"
+          type="discard"
+          :data="gridDataDiscard"
+          :active="false"
+          :round="roundData.round"
+        >
+        </Grid>
+      </div>
     </div>
 
     <div id="ctrl_buttons">
@@ -569,8 +647,42 @@ defineExpose({
   > .round-info {
     flex: 1 1 auto;
     text-align: right;
-    margin: 5px;
+    padding: 5px;
     font-weight: bold;
   }
 }
+
+.tabs {
+  display: flex
+  ;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tabs > li {
+  border: 1px solid transparent;
+  padding: 5px 10px;
+  border-radius: 5px 5px 0 0;
+  cursor: pointer;
+}
+.tabs h3 {
+  margin: 0;
+}
+.tabs h3 svg {
+  margin-right: 5px;
+}
+.card-header .round-info,
+.card-header li:not(.selected) {
+  border-bottom: 1px solid #aaa;
+}
+.card-header li.selected {
+  border: 1px solid #aaa;
+  border-bottom: 1px transparent;
+}
+ .day .card-header li:not(.selected) {
+   color: #888;
+ }
+ .night .card-header li:not(.selected) {
+   color: #ccc;
+ }
 </style>
