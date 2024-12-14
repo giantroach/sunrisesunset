@@ -323,6 +323,23 @@ class SunriseSunset extends Table
       }
     }
 
+    // return discard
+    $discard = [];
+    foreach ($this->getCardsInLocation('discard') as $card) {
+      if (intval($card['location_arg']) === intval($current_player_id)) {
+        $discard[] = [
+          'id' => '0',
+          'type' => 'stealth',
+          'type_arg' => '17',
+          'location' => 'discard',
+          'location_arg' => '0',
+        ];
+      } else {
+        $discard[] = $card;
+      }
+    }
+    $result['discarded'] = $discard;
+
     // identifier
     $result['player_side'] = $this->getPlayerSide($current_player_id);
     $result['player_id'] = intval($current_player_id);
@@ -1038,6 +1055,7 @@ class SunriseSunset extends Table
 
     // remove card from a table
     $this->cards->moveCard($targetCard['id'], 'discard', 0);
+    $oldCard = $this->getCard($targetCard['id']);
     $newCard = $this->cards->pickCard('deck', $targetPlayerID);
     $msg = clienttranslate('"Isis" removed "${card_name}".');
     // this cannot be AllPlayers
@@ -1049,6 +1067,7 @@ class SunriseSunset extends Table
       'col' => $targetCol,
       'card_name' => $targetCardInfo->name,
       'card' => $newCard,
+      'discarded' => $oldCard,
     ]);
     self::notifyPlayer($nonTargetPlayerID, 'reincarnateCard', $msg, [
       'i18n' => ['card_name'],
@@ -1056,6 +1075,7 @@ class SunriseSunset extends Table
       'player_name' => $this->getPlayerName($targetPlayerID),
       'gridID' => $targetGridID,
       'card_name' => $targetCardInfo->name,
+      'discarded' => $oldCard,
     ]);
 
     // Update reincarnation table
@@ -1198,7 +1218,12 @@ class SunriseSunset extends Table
 
       // discard and draw a card
       $newCard = $this->cards->pickCard('deck', $playerID);
-      $this->cards->moveCard($cardID, 'discard', 0);
+      if ($round_num === 1 && $playerID === $dayPlayerID) {
+        $this->cards->moveCard($cardID, 'discard', $playerID);
+      } else {
+        $this->cards->moveCard($cardID, 'discard', 0);
+      }
+      $oldCard = $this->getCard($cardID);
 
       if ($round_num === 1 && $playerID === $dayPlayerID) {
         // for the first round of day player, do not reveal the card
@@ -1211,7 +1236,7 @@ class SunriseSunset extends Table
             'player_name' => self::getActivePlayerName(),
             'card_name' => $cardDef->name,
             'card' => $newCard,
-            'discardedCardID' => $cardID,
+            'discarded' => $oldCard,
           ]
         );
         self::notifyPlayer(
@@ -1220,6 +1245,12 @@ class SunriseSunset extends Table
           clienttranslate('${player_name} discarded a card face down.'),
           [
             'player_name' => self::getActivePlayerName(),
+            'discarded' => [
+              'id' => '0',
+              'type' => 'stealth',
+              'type_arg' => '17',
+              'location' => 'discard',
+            ],
           ]
         );
       } else {
@@ -1232,7 +1263,7 @@ class SunriseSunset extends Table
             'player_name' => self::getActivePlayerName(),
             'card_name' => $cardDef->name,
             'card' => $newCard,
-            'discardedCardID' => $cardID,
+            'discarded' => $oldCard,
           ]
         );
         self::notifyPlayer(
@@ -1243,6 +1274,7 @@ class SunriseSunset extends Table
             'i18n' => ['card_name'],
             'player_name' => self::getActivePlayerName(),
             'card_name' => $cardDef->name,
+            'discarded' => $oldCard,
           ]
         );
       }

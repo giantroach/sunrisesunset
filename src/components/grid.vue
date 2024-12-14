@@ -412,6 +412,7 @@ li.aura {
   position: relative;
 }
 ul.grid {
+  height: 748px;
   transform: scale(0.6);
   margin: -140px 0;
 }

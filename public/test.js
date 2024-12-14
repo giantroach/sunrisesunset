@@ -217,6 +217,22 @@ const testData = [
       },
     },
     is_observer: observer,
+    discarded: [
+      {
+        id: '998',
+        type: 'stealth',
+        type_arg: '17',
+        location: 'discard',
+        location_arg: '4',
+      },
+      {
+        id: '997',
+        type: 'standard',
+        type_arg: '12',
+        location: 'discard',
+        location_arg: '4',
+      },
+    ]
   },
 
   {
@@ -1657,9 +1673,9 @@ const testData = [
 function loadTestData(idx = 0) {
   const vue = window.vue;
   vue.playerID = playerID;
+  vue.state.current = 'playerTurn:init';
   vue.gamedata = testData[idx];
   // vue.restore();
-  vue.state.current = 'playerTurn:init';
   // vue.state.refresh();
 }
 
@@ -2220,6 +2236,32 @@ const testEvent = [
         },
       },
     ],
+  },
+  {
+    name: 'mulligan',
+    args: {
+      player_id: 2348342,
+      player_name:
+      '<!--PNS--><span class="playername" style="color:#ff0000;">giantroach0</span><!--PNE-->',
+      card: {
+        id: '9',
+        type: 'standard',
+        type_arg: '13',
+        location: 'hand',
+        location_arg: '2348342',
+        meta: '',
+      },
+      cards: '3',
+      discardedCardID: '2',
+      discarded: {
+          id: '2',
+          type: 'standard',
+          type_arg: '9',
+          location: 'discard',
+          location_arg: '2348342',
+          meta: '',
+      }
+    },
   },
 ];
 
