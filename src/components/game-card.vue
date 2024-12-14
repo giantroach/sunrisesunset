@@ -192,9 +192,9 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     setTimeout(() => {
       const mcRect2 = mcElm.getBoundingClientRect();
       const mcTop2 = mcRect2.top;
-      const maxTop = 200;
-      if (mcTop2 < maxTop) {
-        modalTop.value += maxTop - mcTop2;
+      const minTop = 200;
+      if (mcTop2 < minTop) {
+        modalTop.value += minTop - mcTop2;
       }
     }, 0);
 
