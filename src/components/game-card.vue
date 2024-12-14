@@ -185,23 +185,18 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
       mcLeft -= mcRect.width / 2 / percentage;
     }
 
-    // if (mcTop + mcRect.height > bdRect.height) {
-    //   mcTop = bdRect.height - mcRect.height;
-    // }
-    // // bdRect.height depends on all the items below
-    // const maxTop =
-    //   (window.innerHeight + window.scrollY - mcRect.height) / percentage;
-    // if (mcTop > maxTop) {
-    //   mcTop = maxTop;
-    // }
-    // // if (mcLeft + mcRect.width > bdRect.width) {
-    // //   mcLeft = bdRect.width - mcRect.width;
-    // // }
-    // modalTop.value = mcTop > minModalTop ? mcTop : minModalTop;
-    // modalLeft.value = mcLeft > 0 ? mcLeft : 0;
-
     modalTop.value = mcTop;
     modalLeft.value = mcLeft;
+
+    // adjust header overwrapping
+    setTimeout(() => {
+      const mcRect2 = mcElm.getBoundingClientRect();
+      const mcTop2 = mcRect2.top;
+      const maxTop = 200;
+      if (mcTop2 < maxTop) {
+        modalTop.value += maxTop - mcTop2;
+      }
+    }, 0);
 
     emit('showDetail', props.id);
   });
