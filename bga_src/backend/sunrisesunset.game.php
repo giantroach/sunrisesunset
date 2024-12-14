@@ -326,7 +326,8 @@ class SunriseSunset extends Table
     // return discard
     $discard = [];
     foreach ($this->getCardsInLocation('discard') as $card) {
-      if (intval($card['location_arg']) === intval($current_player_id)) {
+      $location_arg = intval($card['location_arg']);
+      if ($location_arg !== 0 && $location_arg !== intval($current_player_id)) {
         $discard[] = [
           'id' => '0',
           'type' => 'stealth',
