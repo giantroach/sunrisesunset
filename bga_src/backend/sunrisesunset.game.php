@@ -1391,25 +1391,27 @@ class SunriseSunset extends Table
 
     $numberOfcards = $this->cards->countCardInLocation('hand', $actorID);
 
-    self::notifyPlayer(
-      $actorID,
-      'playCard',
-      // FIXME: add line name
-      clienttranslate('${player_name} played a card at ${lane} lane.'),
-      [
-        'i18n' => ['lane'],
-        'player_id' => $actorID,
-        'player_name' => self::getActivePlayerName(),
-        'card' => $cardInfo,
-        'cards' => $numberOfcards,
-        'gridID' => $gridID,
-        'ignoreActivePlayer' => false,
-        'lane' => $this->getLaneFromGridID($gridID),
-      ]
-    );
-
     $c = $this->card_types[intval($cardInfo['type_arg'])];
     if ($c->stealth) {
+      self::notifyPlayer(
+        $actorID,
+        'playCard',
+        clienttranslate(
+          '${player_name} played "${card_name}" (stealth) at ${lane} lane.'
+        ),
+        [
+          'i18n' => ['lane'],
+          'player_id' => $actorID,
+          'player_name' => self::getActivePlayerName(),
+          'card' => $cardInfo,
+          'card_name' => $c->name,
+          'cards' => $numberOfcards,
+          'gridID' => $gridID,
+          'ignoreActivePlayer' => false,
+          'lane' => $this->getLaneFromGridID($gridID),
+        ]
+      );
+
       self::notifyAllPlayers(
         'playCard',
         clienttranslate(
@@ -1436,12 +1438,15 @@ class SunriseSunset extends Table
     } else {
       self::notifyAllPlayers(
         'playCard',
-        clienttranslate('${player_name} played a card at ${lane} lane.'),
+        clienttranslate(
+          '${player_name} played "${card_name}" at ${lane} lane.'
+        ),
         [
           'i18n' => ['lane'],
           'player_id' => $actorID,
           'player_name' => self::getActivePlayerName(),
           'card' => $cardInfo,
+          'card_name' => $c->name,
           'cards' => $numberOfcards,
           'gridID' => $gridID,
           'ignoreActivePlayer' => true,
