@@ -1449,7 +1449,7 @@ class SunriseSunset extends Table
           'card_name' => $c->name,
           'cards' => $numberOfcards,
           'gridID' => $gridID,
-          'ignoreActivePlayer' => true,
+          'ignoreActivePlayer' => false,
           'playerSide' => $this->getPlayerSide($actorID),
           'lane' => $this->getLaneFromGridID($gridID),
         ]
