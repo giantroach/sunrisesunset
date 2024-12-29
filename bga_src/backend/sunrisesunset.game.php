@@ -473,11 +473,12 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] location number is set to 0 by "La Plaga".'
+          '[${lane_name} lane] location number is set to 0 by "La Plaga".'
         ),
         [
-          'i18n' => ['lane'],
+          'i18n' => ['lane_name'],
           'lane' => $lane,
+          'lane_name' => $lane,
         ]
       );
       $tmpCenter['set0'] = true;
@@ -487,11 +488,12 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] location number is increased by 1 by "Maat".'
+          '[${lane_name} lane] location number is increased by 1 by "Maat".'
         ),
         [
-          'i18n' => ['lane'],
+          'i18n' => ['lane_name'],
           'lane' => $lane,
+          'lane_name' => $lane,
         ]
       );
       $tmpCenter['adjust'] += 1;
@@ -501,11 +503,12 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] location number is decreased by 2 by "El Libro de los Muertos".'
+          '[${lane_name} lane] location number is decreased by 2 by "El Libro de los Muertos".'
         ),
         [
-          'i18n' => ['lane'],
+          'i18n' => ['lane_name'],
           'lane' => $lane,
+          'lane_name' => $lane,
         ]
       );
       $tmpCenter['adjust'] -= 2;
@@ -532,11 +535,12 @@ class SunriseSunset extends Table
       self::notifyAllPlayers(
         'score',
         clienttranslate(
-          '[${lane} lane] "Apis" became power 15 since location is ${center}.'
+          '[${lane_name} lane] "Apis" became power 15 since location is ${center}.'
         ),
         [
-          'i18n' => ['lane'],
+          'i18n' => ['lane_name'],
           'lane' => $lane,
+          'lane_name' => $lane,
           'center' => $center,
         ]
       );
@@ -966,12 +970,15 @@ class SunriseSunset extends Table
     $targetCardInfo['location_arg'] = $gridID;
 
     // move notification
-    $msg = clienttranslate('"Heka" moved a stealth card.');
+    $msg = clienttranslate('"Heka" moved a stealth card from ${from_lane_name} lane to ${to_lane_name} lane.');
     self::notifyAllPlayers('moveCard', $msg, [
+      'i18n' => ['from_lane_name', 'to_lane_name'],
       'player_id' => $targetPlayerID,
       'player_name' => $this->getPlayerName($targetPlayerID),
       'fromGridID' => $targetGridID,
       'toGridID' => $gridID,
+      'from_lane_name' => $this->getLaneFromGridID($targetGridID),
+      'to_lane_name' => $this->getLaneFromGridID($gridID),
     ]);
 
     return true;
@@ -1116,7 +1123,9 @@ class SunriseSunset extends Table
     }
 
     self::notifyPlayer($p1, 'score', $msg, [
+      'i18n' => ['lane_name'],
       'lane' => $lane,
+      'lane_name' => $lane,
       'scoreA' => $scores[$p2],
       'scoreB' => $scores[$p1],
       'wPlayerName' => $wPlayerName,
@@ -1124,7 +1133,9 @@ class SunriseSunset extends Table
     ]);
 
     self::notifyPlayer($p2, 'score', $msg, [
+      'i18n' => ['lane_name'],
       'lane' => $lane,
+      'lane_name' => $lane,
       'scoreA' => $scores[$p1],
       'scoreB' => $scores[$p2],
       'wPlayerName' => $wPlayerName,
@@ -1397,10 +1408,10 @@ class SunriseSunset extends Table
         $actorID,
         'playCard',
         clienttranslate(
-          '${player_name} played "${card_name}" (stealth) at ${lane} lane.'
+          '${player_name} played "${card_name}" (stealth) at ${lane_name} lane.'
         ),
         [
-          'i18n' => ['lane'],
+          'i18n' => ['lane_name'],
           'player_id' => $actorID,
           'player_name' => self::getActivePlayerName(),
           'card' => $cardInfo,
@@ -1409,16 +1420,17 @@ class SunriseSunset extends Table
           'gridID' => $gridID,
           'ignoreActivePlayer' => false,
           'lane' => $this->getLaneFromGridID($gridID),
+          'lane_name' => $this->getLaneFromGridID($gridID),
         ]
       );
 
       self::notifyAllPlayers(
         'playCard',
         clienttranslate(
-          '${player_name} played a stealth card at ${lane} lane.'
+          '${player_name} played a stealth card at ${lane_name} lane.'
         ),
         [
-          'i18n' => ['lane'],
+          'i18n' => ['lane_name'],
           'player_id' => $actorID,
           'player_name' => self::getActivePlayerName(),
           'card' => [
@@ -1433,16 +1445,17 @@ class SunriseSunset extends Table
           'ignoreActivePlayer' => true,
           'playerSide' => $this->getPlayerSide($actorID),
           'lane' => $this->getLaneFromGridID($gridID),
+          'lane_name' => $this->getLaneFromGridID($gridID),
         ]
       );
     } else {
       self::notifyAllPlayers(
         'playCard',
         clienttranslate(
-          '${player_name} played "${card_name}" at ${lane} lane.'
+          '${player_name} played "${card_name}" at ${lane_name} lane.'
         ),
         [
-          'i18n' => ['lane'],
+          'i18n' => ['lane_name'],
           'player_id' => $actorID,
           'player_name' => self::getActivePlayerName(),
           'card' => $cardInfo,
@@ -1452,6 +1465,7 @@ class SunriseSunset extends Table
           'ignoreActivePlayer' => false,
           'playerSide' => $this->getPlayerSide($actorID),
           'lane' => $this->getLaneFromGridID($gridID),
+          'lane_name' => $this->getLaneFromGridID($gridID),
         ]
       );
     }
@@ -1869,7 +1883,7 @@ class SunriseSunset extends Table
 
           if ($score2 == $score1) {
             $this->notifyScore(
-              clienttranslate('[${lane} lane] ${scoreA} vs ${scoreB}. Drawn.'),
+              clienttranslate('[${lane_name} lane] ${scoreA} vs ${scoreB}. Drawn.'),
               $lane,
               $scores,
               'tie'
@@ -1881,7 +1895,7 @@ class SunriseSunset extends Table
           if ($hasEclipse[$pos] && abs($score2 - $score1) >= 4) {
             $this->notifyScore(
               clienttranslate(
-                '[${lane} lane] ${scoreA} vs ${scoreB}. Drawn (drawn by "Eclipse").'
+                '[${lane_name} lane] ${scoreA} vs ${scoreB}. Drawn (drawn by "Eclipse").'
               ),
               $lane,
               $scores,
@@ -1898,7 +1912,7 @@ class SunriseSunset extends Table
             if ($hasTitan[$pos]) {
               $this->notifyScore(
                 clienttranslate(
-                  '[${lane} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won. (lower won due to "Osiris").'
+                  '[${lane_name} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won. (lower won due to "Osiris").'
                 ),
                 $lane,
                 $scores,
@@ -1908,7 +1922,7 @@ class SunriseSunset extends Table
             } else {
               $this->notifyScore(
                 clienttranslate(
-                  '[${lane} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won.'
+                  '[${lane_name} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won.'
                 ),
                 $lane,
                 $scores,
@@ -1944,7 +1958,7 @@ class SunriseSunset extends Table
             if ($hasTitan[$pos]) {
               $this->notifyScore(
                 clienttranslate(
-                  '[${lane} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won (lower won due to "Osiris").'
+                  '[${lane_name} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won (lower won due to "Osiris").'
                 ),
                 $lane,
                 $scores,
@@ -1954,7 +1968,7 @@ class SunriseSunset extends Table
             } else {
               $this->notifyScore(
                 clienttranslate(
-                  '[${lane} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won.'
+                  '[${lane_name} lane] ${scoreA} vs ${scoreB}. ${wPlayerName} won.'
                 ),
                 $lane,
                 $scores,
