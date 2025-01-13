@@ -63,3 +63,7 @@
         background-repeat: none;
     }
 */
+
+#page-title {
+  z-index: 2000;
+}
