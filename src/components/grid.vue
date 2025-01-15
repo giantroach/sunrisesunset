@@ -458,6 +458,7 @@ li.grid-cell.highlighted:not(.selected0, .selected1) {
   position: absolute;
   width: 100%;
   z-index: 1;
+  pointer-events: none;
 }
 .cellOverlay.largeCenter {
   color: white;

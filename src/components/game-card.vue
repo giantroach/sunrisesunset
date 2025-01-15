@@ -260,7 +260,7 @@ const getFormatText = (text: string): string => {
   <div class="container">
     <template v-if="!prioritizeMini || !miniDef">
       <div
-        :id="'card-' + id"
+        :id="'card-' + props.id"
         class="card"
         v-bind:style="{
           width: size.width,
@@ -290,7 +290,7 @@ const getFormatText = (text: string): string => {
 
     <template v-if="miniDef && prioritizeMini">
       <div
-        :id="'card-mini-' + id"
+        :id="'card-mini-' + props.id"
         class="card card-mini"
         :class="{
           ghost: props.ghost,
@@ -320,7 +320,7 @@ const getFormatText = (text: string): string => {
 
     <template v-if="modal">
       <div
-        :id="'card-modal-' + id"
+        :id="'card-modal-' + props.id"
         class="card card-modal"
         :class="{
           selectable: !props.selected && selectable,
