@@ -48,7 +48,6 @@ const modalTop: Ref<number> = ref(-10000);
 const modalLeft: Ref<number> = ref(-10000);
 const modalScaleOrig: Ref<string> = ref('center');
 
-const id: Ref<string> = ref(props.id || '');
 const urlBase: Ref<string> = inject('urlBase') || ref('');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const i18n: Ref<any> = inject('i18n') || ref('');
