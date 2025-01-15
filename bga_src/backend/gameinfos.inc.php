@@ -106,13 +106,5 @@ $gameinfos = [
   // Short game presentation text that will appear on the game description page, structured as an array of paragraphs.
   // Each paragraph must be wrapped with totranslate() for translation and should not contain html (plain text without formatting).
 
-  //////// BGA SANDBOX ONLY PARAMETERS (DO NOT MODIFY)
-
-  // simple : A plays, B plays, C plays, A plays, B plays, ...
-  // circuit : A plays and choose the next player C, C plays and choose the next player D, ...
-  // complex : A+B+C plays and says that the next player is A+B
-  'is_sandbox' => false,
-  'turnControl' => 'simple',
-
   ////////
 ];
