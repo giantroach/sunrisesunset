@@ -1,18 +1,34 @@
-# Vue 3 + TypeScript + Vite
+# Sunrise Sunset BGA implementation
+This is an official BGA implementation of [Sunrise Sunset](https://www.perrolokogames.com/en/sunrise-sunset/).
+The client code is written in Vue 3 and is combined with the BGA framework during the build process.
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+# To run the project
+## Prerequisite
+- node v20+
+- npm v11+
 
-## Recommended IDE Setup
+## Build
+```console
+npm install # only the first time
+npm run build
+```
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Sync `dist` dir to BGA server.
 
-## Type Support For `.vue` Imports in TS
+## Client testing
+With the following command, you can run this project locally without a backend.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+```console
+npm install # only for the first time
+npm start
+```
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+# Project structure
+## bga_src
+`bga_src` contains all the BGA backend code and a thin layer of BGA client code.
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+## src
+`src` contains main client code written in Vue3.
+
+## public
+`public/test.js` contains static test data for running this project offline.
