@@ -188,14 +188,16 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     modalLeft.value = mcLeft;
 
     // adjust header overwrapping
-    setTimeout(() => {
-      const mcRect2 = mcElm.getBoundingClientRect();
-      const mcTop2 = mcRect2.top;
-      const minTop = 200;
-      if (mcTop2 < minTop) {
-        modalTop.value += minTop - mcTop2;
-      }
-    }, 0);
+    if (detailPos.value === 'side') {
+      setTimeout(() => {
+        const mcRect2 = mcElm.getBoundingClientRect();
+        const mcTop2 = mcRect2.top;
+        const minTop = 200;
+        if (mcTop2 < minTop) {
+          modalTop.value += minTop - mcTop2;
+        }
+      }, 0);
+    }
 
     emit('showDetail', props.id);
   });
