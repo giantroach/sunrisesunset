@@ -174,10 +174,19 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     if (isMobile.value) {
       // Mobile: center on screen with max 80% of viewport
       // Ignore props.modalScale on mobile - calculate based on actual screen size only
-      const maxWidth = window.innerWidth * 0.8;
-      const maxHeight = window.innerHeight * 0.8;
+
+      // Account for zoom: element sizes are affected by zoom, but screen dimensions are not
       const cardWidth = mcRect.width / percentage;
       const cardHeight = mcRect.height / percentage;
+
+      // Available space (accounting for zoom if modal is inside zoomed container)
+      // If #modals is outside zoom container, use window dimensions directly
+      // If inside, need to adjust for zoom
+      const availableWidth = window.innerWidth / percentage;
+      const availableHeight = window.innerHeight / percentage;
+
+      const maxWidth = availableWidth * 0.8;
+      const maxHeight = availableHeight * 0.8;
 
       // Calculate scale to fit within 80% of viewport
       const scaleX = maxWidth / cardWidth;
@@ -186,8 +195,8 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
 
       // Position element so its center is at screen center
       // With transform-origin: center, the element scales from its center point
-      modalLeft.value = (window.innerWidth - cardWidth) / 2;
-      modalTop.value = (window.innerHeight - cardHeight) / 2;
+      modalLeft.value = (availableWidth - cardWidth) / 2;
+      modalTop.value = (availableHeight - cardHeight) / 2;
       modalScaleOrig.value = 'center';
     } else {
       // Desktop: relative position to card
