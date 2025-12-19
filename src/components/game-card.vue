@@ -160,17 +160,20 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     duringAnim = false;
   }, 1000);
 
-  setTimeout(() => {
-    // wait for render
-    const mcElm = document.querySelector('#card-modal-' + props.id);
-    const gcElm = document.getElementById('overall-content');
-    if (!mcElm || !gcElm) {
-      return;
-    }
-    const mcRect = mcElm.getBoundingClientRect();
+  // Use requestAnimationFrame to ensure DOM is fully rendered before calculating position
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      // wait for render
+      const mcElm = document.querySelector('#card-modal-' + props.id);
+      const gcElm = document.getElementById('overall-content');
+      if (!mcElm || !gcElm) {
+        return;
+      }
+      const mcRect = mcElm.getBoundingClientRect();
 
     if (isMobile.value) {
       // Mobile: center on screen with max 80% of viewport
+      // Ignore props.modalScale on mobile - calculate based on actual screen size only
       const maxWidth = window.innerWidth * 0.8;
       const maxHeight = window.innerHeight * 0.8;
       const cardWidth = mcRect.width / percentage;
@@ -179,9 +182,7 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
       // Calculate scale to fit within 80% of viewport
       const scaleX = maxWidth / cardWidth;
       const scaleY = maxHeight / cardHeight;
-      const scale = Math.min(scaleX, scaleY, 1); // Don't scale up, only down
-
-      modalScale.value = scale * (props.modalScale || 1);
+      modalScale.value = Math.min(scaleX, scaleY, 1); // Don't scale up, only down
 
       // Position element so its center is at screen center
       // With transform-origin: center, the element scales from its center point
@@ -215,19 +216,20 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
       modalLeft.value = mcLeft;
     }
 
-    // adjust header overwrapping (desktop only)
-    if (!isMobile.value && detailPos.value === 'side') {
-      setTimeout(() => {
-        const mcRect2 = mcElm.getBoundingClientRect();
-        const mcTop2 = mcRect2.top;
-        const minTop = 200;
-        if (mcTop2 < minTop) {
-          modalTop.value += minTop - mcTop2;
-        }
-      }, 0);
-    }
+      // adjust header overwrapping (desktop only)
+      if (!isMobile.value && detailPos.value === 'side') {
+        setTimeout(() => {
+          const mcRect2 = mcElm.getBoundingClientRect();
+          const mcTop2 = mcRect2.top;
+          const minTop = 200;
+          if (mcTop2 < minTop) {
+            modalTop.value += minTop - mcTop2;
+          }
+        }, 0);
+      }
 
-    emit('showDetail', props.id);
+      emit('showDetail', props.id);
+    }, 0);
   });
 };
 
@@ -263,6 +265,10 @@ const mouseOutFromDetail = () => {
 
 const hideDetails = () => {
   modal.value = false;
+  // Reset modal position to prevent issues on next open
+  modalTop.value = -10000;
+  modalLeft.value = -10000;
+  modalScale.value = 1;
   emit('hideDetail', props.id);
 };
 
