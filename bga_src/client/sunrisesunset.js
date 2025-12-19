@@ -398,27 +398,7 @@ define([
           }
           const reqBase = `/${appName}/${appName}`;
           const url = `${reqBase}/${req.name}.html`;
-          vue.bgaRequestPromise = new Promise((resolve, reject) => {
-            this.ajaxcall(
-              url,
-              Object.assign(
-                {
-                  lock: true,
-                },
-                req.args
-              ),
-              this,
-              (result) => {
-                resolve(result);
-              },
-              (error) => {
-                // this is called even if it success
-                if (error) {
-                  reject(error);
-                }
-              }
-            );
-          });
+          vue.bgaRequestPromise = this.bgaPerformAction(req.name, req.args);
         }
       );
     },
