@@ -105,6 +105,34 @@ ul {
 ul.hand {
   display: flex;
   justify-content: center;
+
+  /* Enable horizontal scroll only on mobile (viewport width <= 800px) */
+  @media screen and (max-width: 800px) {
+    overflow-x: auto;
+    overflow-y: visible;
+    max-width: 100%;
+    justify-content: flex-start;
+    padding: 0 10px;
+
+    /* Scrollbar styling for Webkit browsers */
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+  }
 }
 li {
   list-style-type: none;
@@ -113,11 +141,12 @@ li {
   transition: margin-left 0.5s;
   transition: margin-right 0.5s;
   border: 2px solid transparent;
+  overflow: visible;
 
-  @media screen and (max-width: 800px) {
-    margin-left: -30px;
-    margin-right: -30px;
-  }
+  /* @media screen and (max-width: 800px) {
+     margin-left: -30px;
+     margin-right: -30px;
+     } */
 }
 
 .selectable {
