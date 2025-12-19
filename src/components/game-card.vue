@@ -47,6 +47,8 @@ const modal: Ref<boolean> = ref(false);
 const modalTop: Ref<number> = ref(-10000);
 const modalLeft: Ref<number> = ref(-10000);
 const modalScaleOrig: Ref<string> = ref('center');
+const isMobile: Ref<boolean> = ref(false);
+const modalScale: Ref<number> = ref(1);
 
 const urlBase: Ref<string> = inject('urlBase') || ref('');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -149,9 +151,8 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     percentage = Number(match[1]);
   }
 
-  // find center coordinate
-  const centerY = rect.height / 2 / percentage;
-  const centerX = rect.width / 2 / percentage;
+  // Check if mobile (viewport width <= 800px)
+  isMobile.value = window.innerWidth <= 800;
 
   modal.value = true;
   duringAnim = true;
@@ -168,27 +169,54 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
     }
     const mcRect = mcElm.getBoundingClientRect();
 
-    let mcTop = centerY - mcRect.height / 2 / percentage;
-    let mcLeft = centerX;
-    if (detailPos.value === 'side') {
-      if (document.body.clientWidth / 2 < rect.left) {
-        // show left
-        mcLeft -= (rect.width / 2 + mcRect.width) / percentage + 5;
-        modalScaleOrig.value = 'center right';
-      } else {
-        // show right
-        mcLeft = (rect.width / percentage + 5) * (props.modalScale || 1);
-        modalScaleOrig.value = 'center left';
-      }
+    if (isMobile.value) {
+      // Mobile: center on screen with max 80% of viewport
+      const maxWidth = window.innerWidth * 0.8;
+      const maxHeight = window.innerHeight * 0.8;
+      const cardWidth = mcRect.width / percentage;
+      const cardHeight = mcRect.height / percentage;
+
+      // Calculate scale to fit within 80% of viewport
+      const scaleX = maxWidth / cardWidth;
+      const scaleY = maxHeight / cardHeight;
+      const scale = Math.min(scaleX, scaleY, 1); // Don't scale up, only down
+
+      modalScale.value = scale * (props.modalScale || 1);
+
+      // Position element so its center is at screen center
+      // With transform-origin: center, the element scales from its center point
+      modalLeft.value = (window.innerWidth - cardWidth) / 2;
+      modalTop.value = (window.innerHeight - cardHeight) / 2;
+      modalScaleOrig.value = 'center';
     } else {
-      mcLeft -= mcRect.width / 2 / percentage;
+      // Desktop: relative position to card
+      modalScale.value = props.modalScale || 1;
+
+      const centerY = rect.height / 2 / percentage;
+      const centerX = rect.width / 2 / percentage;
+
+      let mcTop = centerY - mcRect.height / 2 / percentage;
+      let mcLeft = centerX;
+      if (detailPos.value === 'side') {
+        if (document.body.clientWidth / 2 < rect.left) {
+          // show left
+          mcLeft -= (rect.width / 2 + mcRect.width) / percentage + 5;
+          modalScaleOrig.value = 'center right';
+        } else {
+          // show right
+          mcLeft = (rect.width / percentage + 5) * modalScale.value;
+          modalScaleOrig.value = 'center left';
+        }
+      } else {
+        mcLeft -= mcRect.width / 2 / percentage;
+      }
+
+      modalTop.value = mcTop;
+      modalLeft.value = mcLeft;
     }
 
-    modalTop.value = mcTop;
-    modalLeft.value = mcLeft;
-
-    // adjust header overwrapping
-    if (detailPos.value === 'side') {
+    // adjust header overwrapping (desktop only)
+    if (!isMobile.value && detailPos.value === 'side') {
       setTimeout(() => {
         const mcRect2 = mcElm.getBoundingClientRect();
         const mcTop2 = mcRect2.top;
@@ -319,7 +347,64 @@ const getFormatText = (text: string): string => {
       </div>
     </template>
 
-    <template v-if="modal">
+    <!-- Mobile: use Teleport with centered modal -->
+    <Teleport to="#modals" v-if="modal && isMobile">
+      <div class="modal-backdrop" @click="hideDetails">
+        <div
+          :id="'card-modal-' + props.id"
+          class="card card-modal card-modal-mobile"
+          :class="{
+            selectable: !props.selected && selectable,
+            selected: props.selected,
+          }"
+          v-bind:style="{
+            width: size.width,
+            height: size.height,
+            top: modalTop + 'px',
+            left: modalLeft + 'px',
+            backgroundImage: 'url(' + urlBase + image + ')',
+            borderRadius: size.radius,
+            backgroundPosition: bgPos,
+            transform: `scale(${modalScale})`,
+            transformOrigin: modalScaleOrig,
+          }"
+          @click.stop="selectCard"
+        >
+          <div v-if="text" class="container-text">
+            <div
+              class="text"
+              v-if="text"
+              v-bind:style="{
+                top: textDef.offsetY,
+                borderWidth: `0 ${textDef.paddingSide || 0} ${
+                  textDef.paddingBottom || 0
+                }`,
+              }"
+              v-html="getFormatText(i18n(text))"
+            ></div>
+          </div>
+
+          <ul
+            class="detail-meta-modal"
+            v-if="meta && meta.length"
+            v-bind:style="{
+              width: 100,
+              height: size.height,
+              borderRadius: size.radius,
+            }"
+          >
+            <li v-for="(m, idx) in meta" :key="idx">
+              <div v-if="m.metaID" class="meta-text">
+                {{ i18n(cardMetaDefs?.[m.metaID]?.text || '') }}
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- Desktop: no Teleport, relative positioning -->
+    <template v-if="modal && !isMobile">
       <div
         :id="'card-modal-' + props.id"
         class="card card-modal"
@@ -335,7 +420,7 @@ const getFormatText = (text: string): string => {
           backgroundImage: 'url(' + urlBase + image + ')',
           borderRadius: size.radius,
           backgroundPosition: bgPos,
-          transform: `scale(${props.modalScale || 1})`,
+          transform: `scale(${modalScale})`,
           transformOrigin: modalScaleOrig,
         }"
         @click="selectCard"
@@ -400,6 +485,26 @@ const getFormatText = (text: string): string => {
 .detail-meta-modal {
   top:0;
   right:0;
+}
+
+/* Mobile modal backdrop */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadein 0.3s ease-out forwards;
+}
+
+.card-modal-mobile {
+  position: fixed !important;
+  z-index: 1001;
 }
 
 .container-text,
