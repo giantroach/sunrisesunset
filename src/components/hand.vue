@@ -143,10 +143,10 @@ li {
   border: 2px solid transparent;
   overflow: visible;
 
-  @media screen and (max-width: 800px) {
-    margin-left: -30px;
-    margin-right: -30px;
-  }
+  /* @media screen and (max-width: 800px) {
+     margin-left: -30px;
+     margin-right: -30px;
+     } */
 }
 
 .selectable {

@@ -172,7 +172,7 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
       const mcRect = mcElm.getBoundingClientRect();
 
     if (isMobile.value) {
-      // Mobile: center on screen with max 80% of viewport
+      // Mobile: center on screen with max 90% of viewport
       // Ignore props.modalScale on mobile - calculate based on actual screen size only
 
       // Account for zoom: element sizes are affected by zoom, but screen dimensions are not
@@ -185,10 +185,10 @@ const showDetails = (evt: MouseEvent | TouchEvent) => {
       const availableWidth = window.innerWidth / percentage;
       const availableHeight = window.innerHeight / percentage;
 
-      const maxWidth = availableWidth * 0.8;
-      const maxHeight = availableHeight * 0.8;
+      const maxWidth = availableWidth * 0.9;
+      const maxHeight = availableHeight * 0.9;
 
-      // Calculate scale to fit within 80% of viewport
+      // Calculate scale to fit within 90% of viewport
       const scaleX = maxWidth / cardWidth;
       const scaleY = maxHeight / cardHeight;
       modalScale.value = Math.min(scaleX, scaleY, 1); // Don't scale up, only down
